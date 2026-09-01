@@ -1,0 +1,78 @@
+package com.lancenter.lancenterhd.model;
+
+import com.lancenter.lancenterhd.enums.Rol;
+
+/**
+ * Usuario del sistema LanReserve (Cliente, Operador o Administrador).
+ * Los clientes presenciales pueden ser registrados por el operador con
+ * nombre + celular, sin contraseña (passwordHash nulo = cuenta sin acceso web).
+ */
+public class Usuario {
+
+    private Long id;
+    private String nombre;
+    private String email;
+    private String celular;
+    private String passwordHash;
+    private Rol rol;
+
+    public Usuario() {
+    }
+
+    public Usuario(Long id, String nombre, String email, String celular, String passwordHash, Rol rol) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.celular = celular;
+        this.passwordHash = passwordHash;
+        this.rol = rol;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+}
