@@ -1,19 +1,48 @@
 package com.lancenter.lancenterhd.model;
 
 import com.lancenter.lancenterhd.enums.Rol;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
- * Usuario del sistema LanReserve (Cliente, Operador o Administrador).
- * Los clientes presenciales pueden ser registrados por el operador con
- * nombre + celular, sin contraseña (passwordHash nulo = cuenta sin acceso web).
+ * Usuario del sistema (Cliente, Operador o Administrador).
+ *
+ * Los clientes que llegan al mostrador se registran con nombre y celular,
+ * sin contrasena: en ese caso passwordHash queda nulo y la cuenta no tiene
+ * acceso web hasta que el cliente defina una clave.
  */
+@Entity
+@Table(name = "usuarios")
 public class Usuario {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(unique = true)
     private String email;
+
+    /**
+     * Clave natural del cliente presencial. Es unico porque es el dato con el
+     * que el operador lo identifica en su siguiente visita.
+     */
+    @Column(unique = true)
     private String celular;
+
+    @Column(name = "password_hash")
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Rol rol;
 
     public Usuario() {
