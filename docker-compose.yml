@@ -3,22 +3,44 @@ services:
     image: mysql:8
     container_name: lancenterhd-db
     restart: unless-stopped
+
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: lancenterhd
+      MYSQL_USER: lancenter
+      MYSQL_PASSWORD: lancenter
+
     ports:
       - "3306:3306"
+
     volumes:
       - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
 
   app:
     build:
       context: ./lancenterhd
+
     container_name: lancenterhd-app
+    restart: unless-stopped
+
     ports:
       - "8080:8080"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/lancenterhd?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: lancenter
+      SPRING_DATASOURCE_PASSWORD: lancenter
+
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 volumes:
   mysql_data:
