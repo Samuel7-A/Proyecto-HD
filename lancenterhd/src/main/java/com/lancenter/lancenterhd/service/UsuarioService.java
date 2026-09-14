@@ -2,56 +2,44 @@ package com.lancenter.lancenterhd.service;
 
 import com.lancenter.lancenterhd.enums.Rol;
 import com.lancenter.lancenterhd.model.Usuario;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
 
 /**
  * Registro y gestion de usuarios.
  *
- * Nota sobre el hash: se usa SHA-256 con el email como sal para no agregar
- * dependencias al proyecto. El paso siguiente es migrar a BCrypt mediante
- * spring-security-crypto, que es el algoritmo adecuado para contrasenas.
+ * Las contrasenas se guardan con BCrypt, que aplica una sal aleatoria por
+ * usuario y un factor de costo. La clave original nunca se almacena ni se
+ * puede recuperar a partir del hash.
  */
 @Service
 public class UsuarioService {
 
+    private final PasswordEncoder codificador = new BCryptPasswordEncoder();
+
     /**
      * Registra un cliente que llega desde la web.
-     * La clave se guarda hasheada; nunca en texto plano.
      */
     public Usuario registrar(String nombre, String email, String celular, String clave) {
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setEmail(email);
         usuario.setCelular(celular);
-        usuario.setPasswordHash(hash(clave, email));
+        usuario.setPasswordHash(codificador.encode(clave));
         usuario.setRol(Rol.CLIENTE);
         return usuario;
     }
 
     /**
-     * Verifica una clave contra el hash guardado.
-     * Se usa el email como sal, igual que en el registro.
+     * Comprueba una clave contra el hash guardado.
+     * Devuelve falso si la cuenta no tiene contrasena, como ocurre con los
+     * clientes que el operador registra en el mostrador.
      */
     public boolean claveCorrecta(Usuario usuario, String clave) {
-        if (usuario.getPasswordHash() == null) {
+        if (usuario == null || usuario.getPasswordHash() == null) {
             return false;
         }
-        return usuario.getPasswordHash().equals(hash(clave, usuario.getEmail()));
-    }
-
-    private String hash(String clave, String sal) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            String entrada = clave + (sal == null ? "" : sal);
-            byte[] salida = digest.digest(entrada.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(salida);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Algoritmo de hash no disponible", e);
-        }
+        return codificador.matches(clave, usuario.getPasswordHash());
     }
 }
