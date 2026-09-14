@@ -1,9 +1,17 @@
 package com.lancenter.lancenterhd.model;
 
+import com.lancenter.lancenterhd.enums.Canal;
+import com.lancenter.lancenterhd.enums.EstadoReserva;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-
+/**
+ * Entidad Reserva.
+ * POJO simple, sin JPA y sin Lombok (getters/setters escritos a mano),
+ * tal como se definió para la rama feature/reservas.
+ */
 public class Reserva {
 
     private Long id;
@@ -12,16 +20,16 @@ public class Reserva {
     private LocalDate fecha;
     private LocalTime horaInicio;
     private LocalTime horaFin;
-    private String estado;
-    private String canal;
-    private Double costo;
+    private EstadoReserva estado;
+    private Canal canal;
+    private BigDecimal costo;
 
     public Reserva() {
     }
 
     public Reserva(Long id, Long usuarioId, Long maquinaId, LocalDate fecha,
-                   LocalTime horaInicio, LocalTime horaFin, String estado,
-                   String canal, Double costo) {
+                   LocalTime horaInicio, LocalTime horaFin, EstadoReserva estado,
+                   Canal canal, BigDecimal costo) {
         this.id = id;
         this.usuarioId = usuarioId;
         this.maquinaId = maquinaId;
@@ -81,34 +89,27 @@ public class Reserva {
         this.horaFin = horaFin;
     }
 
-    /**
-     * Estados posibles de una reserva:
-     * PENDIENTE, CONFIRMADA, EN_CURSO, FINALIZADA, CANCELADA, NO_SHOW
-     */
-    public String getEstado() {
+    public EstadoReserva getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoReserva estado) {
         this.estado = estado;
     }
 
-    /**
-     * Canal por el que se realizó la reserva: ONLINE o PRESENCIAL
-     */
-    public String getCanal() {
+    public Canal getCanal() {
         return canal;
     }
 
-    public void setCanal(String canal) {
+    public void setCanal(Canal canal) {
         this.canal = canal;
     }
 
-    public Double getCosto() {
+    public BigDecimal getCosto() {
         return costo;
     }
 
-    public void setCosto(Double costo) {
+    public void setCosto(BigDecimal costo) {
         this.costo = costo;
     }
 
@@ -121,8 +122,8 @@ public class Reserva {
                 ", fecha=" + fecha +
                 ", horaInicio=" + horaInicio +
                 ", horaFin=" + horaFin +
-                ", estado='" + estado + '\'' +
-                ", canal='" + canal + '\'' +
+                ", estado=" + estado +
+                ", canal=" + canal +
                 ", costo=" + costo +
                 '}';
     }
