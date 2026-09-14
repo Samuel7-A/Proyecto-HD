@@ -30,7 +30,7 @@ En el paso 5, si la máquina ya está ocupada en ese horario:
 1. El sistema muestra un mensaje de "ocupado" y regresa a la selección.
 2. El flujo regresa al paso 3.
 
-**Postcondición:** Reserva en `PENDIENTE_PAGO`, máquina bloqueada en ese horario hasta que el operador valide el pago (CU-06) o se marque no-show tras 10 min de gracia.
+**Postcondición:** Reserva en `PENDIENTE_PAGO`, máquina bloqueada en ese horario hasta que el operador valide el pago (CU-06) o se marque no-show tras 15 min de gracia.
 
 ```mermaid
 flowchart TD
