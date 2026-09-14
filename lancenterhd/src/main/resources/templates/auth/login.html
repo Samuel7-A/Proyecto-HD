@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesion - LanReserve</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container my-5" style="max-width: 460px;">
+    <h1 class="h3 mb-4 text-center">Iniciar sesion</h1>
+
+    <div class="alert alert-success" th:if="${param.registrado}">
+        Tu cuenta fue creada. Ahora puedes iniciar sesion.
+    </div>
+
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form th:action="@{/auth/login}" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="clave" class="form-label">Contrasena</label>
+                    <input type="password" id="clave" name="clave" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+            </form>
+        </div>
+    </div>
+
+    <p class="text-center mt-3">
+        Aun no tienes cuenta?
+        <a th:href="@{/auth/registro}">Registrate aqui</a>
+    </p>
+</div>
+
+</body>
+</html>
