@@ -3,7 +3,7 @@
 ![Flujo general CU-05 y CU-12](diagramas/flujo-general-CU05-CU12.png)
 
 Proyecto: LanReserve
-Curso: Herramientas de Desarrollo II (UTP)
+Curso: Herramientas de Desarrollo (UTP)
 Formato: Modelo Principal (Flujo Básico) + Flujo Alterno + Modelo Secundario
 
 ---
@@ -17,7 +17,7 @@ Formato: Modelo Principal (Flujo Básico) + Flujo Alterno + Modelo Secundario
 ### Modelo Principal (Flujo Básico)
 
 1. El cliente elige la fecha de reserva.
-2. El cliente elige fecha/hora vía Web/App.
+2. El cliente elige fecha/hora vía navegador Web.
 3. El sistema muestra las máquinas disponibles.
 4. El cliente elige una máquina.
 5. El sistema valida si existe solapamiento con otra reserva activa.
@@ -34,7 +34,7 @@ En el paso 5, si la máquina ya está ocupada en ese horario:
 
 ```mermaid
 flowchart TD
-    A[Cliente elige fecha] --> B[Cliente elige fecha/hora Web/App]
+    A[Cliente elige fecha] --> B[Cliente elige fecha/hora navegador Web]
     B --> C[Sistema muestra disponibles]
     C --> D[Cliente elige máquina]
     D --> E{Existe solapamiento?}
