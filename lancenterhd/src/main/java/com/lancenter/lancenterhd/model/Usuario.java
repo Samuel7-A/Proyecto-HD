@@ -45,6 +45,9 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
+    @Column(name = "operador_id")
+    private Long operadorId;
+
     public Usuario() {
     }
 
@@ -104,4 +107,13 @@ public class Usuario {
     public void setRol(Rol rol) {
         this.rol = rol;
     }
+
+    public Long getOperadorId() {
+        return operadorId;
+    }
+
+    public void setOperadorId(Long operadorId) {
+        this.operadorId = operadorId;
+    }
+
 }

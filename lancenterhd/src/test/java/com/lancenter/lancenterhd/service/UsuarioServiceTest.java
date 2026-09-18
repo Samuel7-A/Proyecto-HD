@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Pruebas del registro de usuarios. Son pruebas unitarias puras: no levantan
@@ -60,4 +61,35 @@ class UsuarioServiceTest {
         assertFalse(servicio.claveCorrecta(presencial, "cualquiera"),
                 "El cliente registrado por el operador no tiene acceso web");
     }
+
+    @Test
+    void unClientePresencialSeRegistraSinContrasenaNiCorreo() {
+        Usuario usuario = servicio.registrarPresencial(
+                "Cliente de mostrador",
+                "999888777",
+                10L
+        );
+
+        assertEquals("Cliente de mostrador", usuario.getNombre());
+        assertEquals("999888777", usuario.getCelular());
+        assertEquals(Rol.CLIENTE, usuario.getRol());
+        assertEquals(10L, usuario.getOperadorId());
+        assertNull(usuario.getEmail());
+        assertNull(usuario.getPasswordHash());
+    }
+
+    @Test
+    void unClientePresencialNoPuedeIngresarAntesDeActivarse() {
+        Usuario usuario = servicio.registrarPresencial(
+                "Cliente de mostrador",
+                "999888777",
+                10L
+        );
+
+        assertFalse(
+                servicio.claveCorrecta(usuario, "cualquierClave"),
+                "Una cuenta presencial sin activar no debe poder iniciar sesion"
+        );
+    }
+
 }
