@@ -32,6 +32,21 @@ public class UsuarioService {
     }
 
     /**
+     * Registra un cliente que llega presencialmente al mostrador.
+     * La cuenta nace sin correo ni contrasena y puede activarse despues.
+     */
+    public Usuario registrarPresencial(String nombre, String celular, Long operadorId) {
+        Usuario usuario = new Usuario();
+        usuario.setNombre(nombre);
+        usuario.setCelular(celular);
+        usuario.setEmail(null);
+        usuario.setPasswordHash(null);
+        usuario.setRol(Rol.CLIENTE);
+        usuario.setOperadorId(operadorId);
+        return usuario;
+    }
+
+    /**
      * Comprueba una clave contra el hash guardado.
      * Devuelve falso si la cuenta no tiene contrasena, como ocurre con los
      * clientes que el operador registra en el mostrador.
