@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Consola del Operador</title>
+</head>
+<body>
+
+    <h1>Consola del Operador</h1>
+
+    <h2>Reservas del Día</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Máquina</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reserva : ${reservas}">
+                <td th:text="${reserva.id}"></td>
+                <td th:text="${reserva.cliente}"></td>
+                <td th:text="${reserva.maquina}"></td>
+                <td th:text="${reserva.horaInicio}"></td>
+                <td th:text="${reserva.estado}"></td>
+                <td>
+                    <button>Validar Pago</button>
+                    <button>Marcar No-Show</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
