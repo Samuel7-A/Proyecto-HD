@@ -8,6 +8,20 @@
 
     <h1>Consola del Operador</h1>
 
+    <p th:if="${error}" th:text="${error}"></p>
+
+    <h2>Registrar Cliente Presencial</h2>
+    <form th:action="@{/operador/consola/registrar}" method="post">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" required>
+
+        <label for="celular">Celular</label>
+        <input id="celular" name="celular" type="tel" required>
+
+        <input type="hidden" name="operadorId" th:value="${operadorId}">
+        <button type="submit">Registrar Cliente</button>
+    </form>
+
     <h2>Reservas del Día</h2>
 
     <table border="1">
@@ -24,13 +38,19 @@
         <tbody>
             <tr th:each="reserva : ${reservas}">
                 <td th:text="${reserva.id}"></td>
-                <td th:text="${reserva.cliente}"></td>
-                <td th:text="${reserva.maquina}"></td>
+                <td th:text="${reserva.usuarioId}"></td>
+                <td th:text="${reserva.maquinaId}"></td>
                 <td th:text="${reserva.horaInicio}"></td>
                 <td th:text="${reserva.estado}"></td>
                 <td>
-                    <button>Validar Pago</button>
-                    <button>Marcar No-Show</button>
+                    <form th:action="@{/operador/consola/validar-pago}" method="post">
+                        <input type="hidden" name="reservaId" th:value="${reserva.id}">
+                        <button type="submit">Validar Pago</button>
+                    </form>
+                    <form th:action="@{/operador/consola/no-show}" method="post">
+                        <input type="hidden" name="reservaId" th:value="${reserva.id}">
+                        <button type="submit">Marcar No-Show</button>
+                    </form>
                 </td>
             </tr>
         </tbody>
