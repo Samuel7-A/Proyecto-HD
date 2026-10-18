@@ -53,15 +53,15 @@
                                 <td th:text="${maquina.especificaciones}">PC Gamer High-End - Zona VIP</td>
                                 <td>
                                     <!-- Evaluación de estado según LanReserve_documento.md -->
-                                    <span th:if="${maquina.estado == 'DISPONIBLE'}" class="badge bg-success">Disponible</span>
-                                    <span th:if="${maquina.estado == 'OCUPADA'}" class="badge bg-danger">Ocupada</span>
-                                    <span th:if="${maquina.estado == 'MANTENIMIENTO'}" class="badge bg-warning text-dark">Mantenimiento</span>
+                                    <span th:if="${maquina.estado.name() == 'DISPONIBLE'}" class="badge bg-success">Disponible</span>
+                                    <span th:if="${maquina.estado.name() == 'OCUPADA'}" class="badge bg-danger">Ocupada</span>
+                                    <span th:if="${maquina.estado.name() == 'MANTENIMIENTO'}" class="badge bg-warning text-dark">Mantenimiento</span>
                                 </td>
                                 <td>
-                                    <a th:if="${maquina.estado == 'DISPONIBLE'}" 
+                                    <a th:if="${maquina.estado.name() == 'DISPONIBLE'}" 
                                        th:href="@{/cliente/reservar(maquinaId=${maquina.id})}" 
                                        class="btn btn-sm btn-outline-success">Reservar</a>
-                                    <button th:unless="${maquina.estado == 'DISPONIBLE'}" 
+                                    <button th:unless="${maquina.estado.name() == 'DISPONIBLE'}" 
                                             class="btn btn-sm btn-secondary" disabled>No disponible</button>
                                 </td>
                             </tr>
