@@ -90,12 +90,12 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Capa | Tecnología |
 |---|---|
 | Control de versiones | Git + GitHub |
-| Backend | Spring Boot 3 (Java 17) |
+| Backend | Spring Boot 4 (Java 21) |
 | Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
 | Contenedores | Docker + Docker Compose (operativo) |
 | CI/CD | GitHub Actions (activo) |
-| Despliegue | Render / Railway (planeado, Unidad 3) |
+| Despliegue | Render / Railway (AWS EC2 como meta) | 
 
 ---
 
@@ -103,9 +103,11 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 
 ```
 Proyecto-HD/
-├── lancenterhd/        # Aplicación Spring Boot (backend + vistas Thymeleaf)
+├── lancenterhd/       # Aplicación Spring Boot (backend + vistas Thymeleaf)
 │   ├── src/main/java/com/lancenter/lancenterhd/
 │   ├── src/main/resources/
+│   ├── src/test/
+│   ├── mvnw / mvnw.cmd
 │   └── pom.xml
 ├── docs/               # Documentación del proyecto (en construcción)
 ├── CONTRIBUTING.md
@@ -118,18 +120,29 @@ Proyecto-HD/
 
 ### Requisitos
 
-- JDK 17
-- Maven 3.9+
+- JDK 21
+- Maven 3.9+ (se incluye el wrapper `mvnw`)
 - MySQL 8 en `localhost:3306` (base de datos `lanreserve`)
 
-### Ejecutar la app
+### Ejecutar la aplicación
 
 ```bash
 cd lancenterhd
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-- App: http://localhost:8080
+En Windows, usar `.\mvnw.cmd spring-boot:run`.
+
+- Aplicación: http://localhost:8080
+
+### Ejecutar las pruebas
+
+```bash
+cd lancenterhd
+./mvnw test
+```
+
+En Windows, usar `.\mvnw.cmd test`.
 
 ---
 
