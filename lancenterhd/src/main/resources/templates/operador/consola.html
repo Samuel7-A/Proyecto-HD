@@ -9,6 +9,7 @@
     <h1>Consola del Operador</h1>
 
     <p th:if="${error}" th:text="${error}"></p>
+    <p th:if="${mensaje}" th:text="${mensaje}"></p>
 
     <h2>Registrar Cliente Presencial</h2>
     <form th:action="@{/operador/consola/registrar}" method="post">
@@ -30,6 +31,7 @@
                 <th>ID</th>
                 <th>Cliente</th>
                 <th>Máquina</th>
+                <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
                 <th>Acciones</th>
@@ -38,8 +40,9 @@
         <tbody>
             <tr th:each="reserva : ${reservas}">
                 <td th:text="${reserva.id}"></td>
-                <td th:text="${reserva.usuarioId}"></td>
-                <td th:text="${reserva.maquinaId}"></td>
+                <td th:text="${nombresClientes.get(reserva.usuarioId)}"></td>
+                <td th:text="${codigosMaquinas.get(reserva.maquinaId)}"></td>
+                <td th:text="${reserva.fecha}"></td>
                 <td th:text="${reserva.horaInicio}"></td>
                 <td th:text="${reserva.estado}"></td>
                 <td>
