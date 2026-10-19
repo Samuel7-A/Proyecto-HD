@@ -4,7 +4,7 @@ Plataforma web para la reserva de máquinas en centros de cómputo y lan centers
 
 **Curso:** Herramientas de Desarrollo (100000S61T) — Universidad Tecnológica del Perú (UTP)
 **Ciclo:** 2026 – Ciclo 2 (Agosto) · **Carrera:** Ingeniería de Software / Sistemas e Informática
-**Etapa actual:** Avance de Proyecto Final 1 (APF1 — Semana 6)
+**Etapa actual:** Avance de Proyecto Final 2 (APF2 — Semana 11)
 
 ---
 
@@ -93,8 +93,8 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Backend | Spring Boot 3 (Java 17) |
 | Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose (planeado, Unidad 3) |
-| CI/CD | GitHub Actions (planeado, Unidad 2) |
+| Contenedores | Docker + Docker Compose (operativo) |
+| CI/CD | GitHub Actions (activo) |
 | Despliegue | Render / Railway (planeado, Unidad 3) |
 
 ---
