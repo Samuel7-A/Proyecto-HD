@@ -37,7 +37,7 @@ El presente informe está organizado en las siguientes secciones:
 | Christian Villacorta | Frontend 2 | feature/frontend-operador | #6 | 2026-10-17 |
 | Christian Villacorta | Frontend 2 | feature/consola-controller | #16 | 2026-10-18 |
 | Benjamin Mendez | Documentación / QA | feature/docs-flujos | #9 | 2026-10-17 |
-| Benjamin Mendez | Documentación / QA | docs/informe-apf2 | #23 | 2026-10-19 |
+| Benjamin Mendez | Documentación / QA | docs/informe-apf2 | #23 | (abierto) |
 
 PRs cerrados sin merge: #3 (Sebastián) y #5 (Christian, con cambios solicitados).
 ## 4. Estrategia de Git aplicada
@@ -53,7 +53,7 @@ El equipo definió su modelo en `CONTRIBUTING.md`. En la práctica se usó así:
 | fix/* | Corrección de errores | fix/arranque-datos (PR #13) |
 | chore/* | Infraestructura | chore/ci (PR #14) |
 | release/* | Preparar una versión | Pendiente: release/v0.2.0 |
-| hotfix/* | Arreglo urgente sobre main | hotfix/docs-readme (PR #20, en revisión). |
+| hotfix/* | Arreglo urgente sobre main | hotfix/docs-readme (rama creada, sin PR aún). |
 
 ### 4.2 Flujo de trabajo
 Cada integrante trabaja en su rama, abre un Pull Request hacia `develop` y
@@ -100,7 +100,7 @@ Evidencia (pestaña Actions, 11 ejecuciones: 10 exitosas y 1 fallida):
 [Pendiente: PR del release v0.2.0, tag y hotfix, con enlaces y capturas.]
 
 ### 4.6 Resolución del conflicto de fusión
-    Al traer la rama `hotfix/docs-readme` a `docs/informe-apf2` se produjo un conflicto en
+Al traer la rama `hotfix/docs-readme` a `docs/informe-apf2` se produjo un conflicto en
 `README.md`, porque ambas ramas modificaron el archivo en paralelo: el hotfix corrigió la
 descripción técnica del proyecto (Spring Boot, estructura real del repositorio y comandos de
 ejecución) y esta rama actualizó la etapa a APF2 y el estado de Docker y CI/CD.
@@ -109,7 +109,7 @@ ejecución) y esta rama actualizó la etapa a APF2 y el estado de Docker y CI/CD
 - **Zonas en conflicto:** tabla de tecnologías, estructura del repositorio, "Cómo ejecutar"
   y estado del proyecto.
 - **Origen:** el hotfix describe el estado de `main`, donde BD, Docker y CI figuran como
-  planeados, mientras que esta rama parte de `develop`, donde el pipeline y Docker ya están activos.
+  planeados, mientras que esta rama parte de `develop`, donde el pipeline está activo y Docker configurado.
 - **Decisión:** conservar ambos cambios, porque eran complementarios.
 - **Resolución:** se usó "Accept Both Changes" en VS Code y se eliminaron las líneas duplicadas.
   Quedó la información técnica corregida del hotfix junto con el estado actualizado de CI/CD y
@@ -132,6 +132,7 @@ ejecución) y esta rama actualizó la etapa a APF2 y el estado de Docker y CI/CD
 ![Conflicto en estado del proyecto](imagenes/conflicto-estado.png)
 
 ![README resuelto](imagenes/readme-resuelto.png)
+
 ## 5. Exposición y enlace
 
 **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
