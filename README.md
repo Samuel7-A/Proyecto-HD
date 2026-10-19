@@ -2,7 +2,7 @@
 Plataforma web para la reserva de máquinas en centros de cómputo y lan centers.
 **Curso:** Herramientas de Desarrollo (100000S61T) — Universidad Tecnológica del Perú (UTP)
 **Ciclo:** 2026 – Ciclo 2 (Agosto) · **Carrera:** Ingeniería de Software / Sistemas e Informática
-**Etapa actual:** Avance de Proyecto Final 1 (APF1 — Semana 6)
+**Etapa actual:** Avance de Proyecto Final 2 (APF2 — Semana 11)
 ---
 ## 🎯 Problemática
 Los dueños de centros de cómputo y lan centers de gran escala (100+ máquinas) tienen dificultad para vender todas las horas de sus máquinas porque la demanda se gestiona de forma exclusivamente presencial y solo se conoce cuando el cliente llega al local:
@@ -46,7 +46,7 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 - Disponibilidad consultada por fecha y horario, sin estado de máquinas en tiempo real.
 - Un solo local por instancia (sin multi-sede) y sin aplicación móvil.
 ---
-## ⚙️ Funcionalidades
+## ⚙️ Funcionalidades planificadas
 - Registro y autenticación por roles
 - CRUD de máquinas y tarifas
 - Consulta de disponibilidad por fecha y horario (bloques de 1 hora)
@@ -58,42 +58,51 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Capa | Tecnología |
 |---|---|
 | Control de versiones | Git + GitHub |
-| Backend | Spring Boot 3 (Java 21) |
-| Frontend | React (Vite) |
-| Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
+| Backend | Spring Boot 4 (Java 17) |
+| Frontend | Thymeleaf (server-side, una sola app) |
+| Base de datos | MySQL 8 (planeado) |
+| Contenedores | Docker + Docker Compose (planeado) |
+| CI/CD | GitHub Actions (planeado) |
 | Despliegue | Render / Railway (AWS EC2 como meta) |
 ---
 ## 📁 Estructura del repositorio
 ```
-Proyecto-LAN-CENTER/
-├── backend/           # API REST — Spring Boot
-├── frontend/          # SPA — React (Vite)
-├── docs/              # Documentación del proyecto
-├── docker-compose.yml
+Proyecto-HD/
+├── lancenterhd/       # Aplicación Spring Boot (backend + vistas Thymeleaf)
+│   ├── src/main/java/com/lancenter/lancenterhd/
+│   ├── src/main/resources/
+│   ├── src/test/
+│   ├── mvnw / mvnw.cmd
+│   └── pom.xml
 └── README.md
 ```
 ---
 ## 🚀 Cómo ejecutar
-### Con Docker (recomendado)
+
+### Requisitos
+
+- JDK 17
+- Maven 3.9+ (se incluye el wrapper `mvnw`)
+
+### Ejecutar la aplicación
+
 ```bash
-docker compose up --build
+cd lancenterhd
+./mvnw spring-boot:run
 ```
-- Frontend: http://localhost
-- Backend: http://localhost:8080
-### Desarrollo local (sin Docker)
-**Backend** (requiere MySQL en `localhost:3306` con base de datos `lanreserve`):
+
+En Windows, usar `.\mvnw.cmd spring-boot:run`.
+
+- Aplicación: http://localhost:8080
+
+### Ejecutar las pruebas
+
 ```bash
-cd backend
-mvn spring-boot:run
+cd lancenterhd
+./mvnw test
 ```
-**Frontend:**
-```bash
-cd frontend
-npm install
-npm run dev
-```
+
+En Windows, usar `.\mvnw.cmd test`.
 ---
 ## 🌿 Estrategia de ramificación (Git Flow)
 - `main` — versión estable (protegida, solo se integra vía Pull Request).
@@ -104,7 +113,7 @@ npm run dev
 - Cada funcionalidad se desarrolla en su rama `feature/` y se fusiona a `develop` vía Pull Request, con revisión de al menos un compañero.
 - Los commits usan mensajes semánticos: `feat:`, `fix:`, `docs:`, `refactor:`.
 - Los conflictos de merge se resuelven documentando la decisión en el PR.
-- Cada avance se etiqueta con un tag/release (`v0.1.0` para el APF1).
+- Cada avance se etiqueta con un tag/release (`v0.2.0` para el APF2).
 ---
 ## 🗺️ Roadmap (alineado al curso)
 | Fase | Hito | Semana |
@@ -127,8 +136,8 @@ npm run dev
 ---
 ## 📌 Estado del proyecto
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
-- [x] Modelo de datos (8 entidades)
+- [ ] Modelo de datos (pendiente)
 - [ ] Backend Spring Boot (esqueleto inicial en desarrollo)
-- [ ] Frontend React (esqueleto inicial en desarrollo)
+- [ ] Vistas Thymeleaf (en desarrollo)
 - [ ] Despliegue con Docker y CI/CD
-- [ ] APF1 — tag `v0.1.0`
+- [ ] APF2 — tag `v0.2.0`
