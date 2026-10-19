@@ -58,8 +58,8 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Capa | Tecnología |
 |---|---|
 | Control de versiones | Git + GitHub |
-| Backend | Spring Boot 3 (Java 21) |
-| Frontend | React (Vite) |
+| Backend | Spring Boot 4 (Java 21) |
+| Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
 | Contenedores | Docker + Docker Compose |
 | CI/CD | GitHub Actions |
@@ -67,32 +67,39 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 ---
 ## 📁 Estructura del repositorio
 ```
-Proyecto-LAN-CENTER/
-├── backend/           # API REST — Spring Boot
-├── frontend/          # SPA — React (Vite)
-├── docs/              # Documentación del proyecto
-├── docker-compose.yml
+Proyecto-HD/
+├── lancenterhd/       # Aplicación Spring Boot (backend + vistas Thymeleaf)
+│   ├── src/main/java/com/lancenter/lancenterhd/
+│   ├── src/main/resources/
+│   ├── src/test/
+│   ├── mvnw / mvnw.cmd
+│   └── pom.xml
 └── README.md
 ```
 ---
 ## 🚀 Cómo ejecutar
-### Con Docker (recomendado)
+
+### Requisitos
+
+- JDK 21
+- Maven 3.9+ (se incluye el wrapper `mvnw`)
+
+### Ejecutar la aplicación
+
 ```bash
-docker compose up --build
+cd lancenterhd
+./mvnw spring-boot:run
 ```
-- Frontend: http://localhost
-- Backend: http://localhost:8080
-### Desarrollo local (sin Docker)
-**Backend** (requiere MySQL en `localhost:3306` con base de datos `lanreserve`):
+
+En Windows, usar `.\mvnw.cmd spring-boot:run`.
+
+- Aplicación: http://localhost:8080
+
+### Ejecutar las pruebas
+
 ```bash
-cd backend
-mvn spring-boot:run
-```
-**Frontend:**
-```bash
-cd frontend
-npm install
-npm run dev
+cd lancenterhd
+./mvnw test
 ```
 ---
 ## 🌿 Estrategia de ramificación (Git Flow)
@@ -127,8 +134,8 @@ npm run dev
 ---
 ## 📌 Estado del proyecto
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
-- [x] Modelo de datos (8 entidades)
+- [x] Modelo de datos (3 entidades: Usuario, Maquina, Reserva)
 - [ ] Backend Spring Boot (esqueleto inicial en desarrollo)
-- [ ] Frontend React (esqueleto inicial en desarrollo)
+- [ ] Vistas Thymeleaf (en desarrollo)
 - [ ] Despliegue con Docker y CI/CD
 - [ ] APF1 — tag `v0.1.0`
