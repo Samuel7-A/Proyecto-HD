@@ -93,9 +93,9 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Backend | Spring Boot 4 (Java 21) |
 | Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose (operativo) |
+| Contenedores | Docker + Docker Compose (configurado) |
 | CI/CD | GitHub Actions (activo) |
-| Despliegue | Render / Railway (AWS EC2 como meta) | 
+| Despliegue | Render / Railway (pendiente) |
 
 ---
 
@@ -122,7 +122,7 @@ Proyecto-HD/
 
 - JDK 21
 - Maven 3.9+ (se incluye el wrapper `mvnw`)
-- MySQL 8 en `localhost:3306` (base de datos `lanreserve`)
+- MySQL 8 en `localhost:3306` (base de datos `lancenterhd`)
 
 ### Ejecutar la aplicación
 
@@ -158,7 +158,7 @@ En Windows, usar `.\mvnw.cmd test`.
 - Cada funcionalidad se desarrolla en su rama `feature/` y se fusiona a `develop` vía Pull Request, con revisión de al menos un compañero.
 - Los commits usan mensajes semánticos: `feat:`, `fix:`, `docs:`, `refactor:`.
 - Los conflictos de merge se resuelven documentando la decisión en el PR.
-- Cada avance se etiqueta con un tag/release (`v0.1.0` para el APF1).
+- Cada avance se etiqueta con un tag/release (`v0.2.0` para el APF2 (objetivo)).
 
 ---
 
@@ -192,9 +192,10 @@ En Windows, usar `.\mvnw.cmd test`.
 
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
 - [x] Esqueleto Spring Boot + Thymeleaf compilando
-- [x] Modelo de datos (8 entidades) y modelo de doble canal (WEB/PRESENCIAL)
+- [x] Entidades JPA `Usuario` y `Maquina` (`Reserva` en progreso, PR #19)
+- [x] Modelo de doble canal (WEB/PRESENCIAL) definido
 - [ ] Autenticación y módulo Administrador
 - [ ] Módulo de reservas y Operador
 - [ ] Vistas Thymeleaf de Cliente, Administrador y Operador
 - [ ] Docker + CI/CD + despliegue
-- [ ] APF1 — tag `v0.1.0`
+- [ ] APF2 — tag `v0.2.0`
