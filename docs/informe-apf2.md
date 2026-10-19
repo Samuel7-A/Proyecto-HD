@@ -133,6 +133,18 @@ ejecución) y esta rama actualizó la etapa a APF2 y el estado de Docker y CI/CD
 
 ![README resuelto](imagenes/readme-resuelto.png)
 
+- **Segundo conflicto:** tras el merge del PR #20 a `develop`, el PR #23 volvió a entrar en
+  conflicto con `README.md` en tres zonas (tabla del stack, requisitos de Maven y checklist del
+  estado). Se resolvió con `git merge origin/develop` siguiendo el criterio definido en el PR:
+  conservar la versión de esta rama en las dos primeras zonas y combinar ambas en el checklist.
+  Commit de merge: `e2b5a87`.
+
+  ![Terminal](imagenes/terminal-segunda.png)
+  ![conflicto 1](imagenes/conflicto1.png)
+  ![conflicto 2](imagenes/conflicto2.png)
+  ![conflicto 3](imagenes/conflicto3.png)
+   ![resolucion 1](imagenes/resolucion1.png)
+    ![README resuelto](imagenes/resolucion2.png)
 ## 5. Exposición y enlace
 
 **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
