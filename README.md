@@ -58,11 +58,11 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Capa | Tecnología |
 |---|---|
 | Control de versiones | Git + GitHub |
-| Backend | Spring Boot 4 (Java 21) |
+| Backend | Spring Boot 4 (Java 17) |
 | Frontend | Thymeleaf (server-side, una sola app) |
-| Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
+| Base de datos | MySQL 8 (planeado) |
+| Contenedores | Docker + Docker Compose (planeado) |
+| CI/CD | GitHub Actions (planeado) |
 | Despliegue | Render / Railway (AWS EC2 como meta) |
 ---
 ## 📁 Estructura del repositorio
@@ -81,7 +81,7 @@ Proyecto-HD/
 
 ### Requisitos
 
-- JDK 21
+- JDK 17
 - Maven 3.9+ (se incluye el wrapper `mvnw`)
 
 ### Ejecutar la aplicación
@@ -101,6 +101,8 @@ En Windows, usar `.\mvnw.cmd spring-boot:run`.
 cd lancenterhd
 ./mvnw test
 ```
+
+En Windows, usar `.\mvnw.cmd test`.
 ---
 ## 🌿 Estrategia de ramificación (Git Flow)
 - `main` — versión estable (protegida, solo se integra vía Pull Request).
@@ -134,7 +136,7 @@ cd lancenterhd
 ---
 ## 📌 Estado del proyecto
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
-- [x] Modelo de datos (3 entidades: Usuario, Maquina, Reserva)
+- [ ] Modelo de datos (pendiente)
 - [ ] Backend Spring Boot (esqueleto inicial en desarrollo)
 - [ ] Vistas Thymeleaf (en desarrollo)
 - [ ] Despliegue con Docker y CI/CD
