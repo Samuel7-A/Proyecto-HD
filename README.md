@@ -46,7 +46,7 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 - Disponibilidad consultada por fecha y horario, sin estado de máquinas en tiempo real.
 - Un solo local por instancia (sin multi-sede) y sin aplicación móvil.
 ---
-## ⚙️ Funcionalidades
+## ⚙️ Funcionalidades planificadas
 - Registro y autenticación por roles
 - CRUD de máquinas y tarifas
 - Consulta de disponibilidad por fecha y horario (bloques de 1 hora)
