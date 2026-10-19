@@ -2,7 +2,7 @@
 Plataforma web para la reserva de máquinas en centros de cómputo y lan centers.
 **Curso:** Herramientas de Desarrollo (100000S61T) — Universidad Tecnológica del Perú (UTP)
 **Ciclo:** 2026 – Ciclo 2 (Agosto) · **Carrera:** Ingeniería de Software / Sistemas e Informática
-**Etapa actual:** Avance de Proyecto Final 1 (APF1 — Semana 6)
+**Etapa actual:** Avance de Proyecto Final 2 (APF2 — Semana 11)
 ---
 ## 🎯 Problemática
 Los dueños de centros de cómputo y lan centers de gran escala (100+ máquinas) tienen dificultad para vender todas las horas de sus máquinas porque la demanda se gestiona de forma exclusivamente presencial y solo se conoce cuando el cliente llega al local:
@@ -113,7 +113,7 @@ En Windows, usar `.\mvnw.cmd test`.
 - Cada funcionalidad se desarrolla en su rama `feature/` y se fusiona a `develop` vía Pull Request, con revisión de al menos un compañero.
 - Los commits usan mensajes semánticos: `feat:`, `fix:`, `docs:`, `refactor:`.
 - Los conflictos de merge se resuelven documentando la decisión en el PR.
-- Cada avance se etiqueta con un tag/release (`v0.1.0` para el APF1).
+- Cada avance se etiqueta con un tag/release (`v0.2.0` para el APF2).
 ---
 ## 🗺️ Roadmap (alineado al curso)
 | Fase | Hito | Semana |
@@ -140,4 +140,4 @@ En Windows, usar `.\mvnw.cmd test`.
 - [ ] Backend Spring Boot (esqueleto inicial en desarrollo)
 - [ ] Vistas Thymeleaf (en desarrollo)
 - [ ] Despliegue con Docker y CI/CD
-- [ ] APF1 — tag `v0.1.0`
+- [ ] APF2 — tag `v0.2.0`
