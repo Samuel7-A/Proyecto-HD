@@ -100,8 +100,21 @@ Evidencia (pestaña Actions, 11 ejecuciones: 10 exitosas y 1 fallida):
 [Pendiente: PR del release v0.2.0, tag y hotfix, con enlaces y capturas.]
 
 ### 4.6 Resolución del conflicto de fusión
-[Pendiente: conflicto del README, pasos y decisión tomada.]
+- **Documentación en el PR:** el conflicto y su resolución se describen en el PR #23 de `docs/informe-apf2` hacia `develop`.
 
+  ![PR con la descripción del conflicto](imagenes/pr-informe-apf2.png)
+  
+**Conflicto detectado en la terminal:**
+
+![Terminal con el CONFLICT en README.md](imagenes/conflicto-terminal.png)
+
+**Zonas en conflicto en el editor:**
+
+![Conflicto en stack tecnológico y estructura](imagenes/conflicto-stack-estructura.png)
+
+![Conflicto en requisitos y ejecución](imagenes/conflicto-requisitos-ejecucion.png)
+
+![Conflicto en estado del proyecto](imagenes/conflicto-estado.png)
 ## 5. Exposición y enlace
 
 **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
