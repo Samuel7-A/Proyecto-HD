@@ -90,11 +90,11 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Capa | Tecnología |
 |---|---|
 | Control de versiones | Git + GitHub |
-| Backend | Spring Boot 3 (Java 17) |
+| Backend | Spring Boot 4 (Java 21) |
 | Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose (planeado, Unidad 3) |
-| CI/CD | GitHub Actions (planeado, Unidad 2) |
+| Contenedores | Docker + Docker Compose |
+| CI/CD | GitHub Actions |
 | Despliegue | Render / Railway (planeado, Unidad 3) |
 
 ---
@@ -118,9 +118,9 @@ Proyecto-HD/
 
 ### Requisitos
 
-- JDK 17
+- JDK 21
 - Maven 3.9+
-- MySQL 8 en `localhost:3306` (base de datos `lanreserve`)
+- MySQL 8 en `localhost:3306` (base de datos `lancenterhd`)
 
 ### Ejecutar la app
 
@@ -179,9 +179,9 @@ mvn spring-boot:run
 
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
 - [x] Esqueleto Spring Boot + Thymeleaf compilando
-- [x] Modelo de datos (8 entidades) y modelo de doble canal (WEB/PRESENCIAL)
-- [ ] Autenticación y módulo Administrador
-- [ ] Módulo de reservas y Operador
-- [ ] Vistas Thymeleaf de Cliente, Administrador y Operador
-- [ ] Docker + CI/CD + despliegue
+- [x] Modelo de datos (3 entidades: Usuario, Maquina, Reserva) y doble canal (WEB/PRESENCIAL)
+- [ ] Autenticación de clientes (parcial: falta módulo Administrador)
+- [ ] Módulo Operador (parcial: Validar Pago y Marcar No-Show pendientes)
+- [ ] Vistas Thymeleaf de Cliente y Operador (parcial: falta Administrador)
+- [ ] Docker y CI/CD (parcial: falta despliegue)
 - [ ] APF1 — tag `v0.1.0`
