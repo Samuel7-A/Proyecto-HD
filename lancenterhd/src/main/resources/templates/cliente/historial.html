@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Reservas - LanReserve</title>
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- LanReserve Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <style>
+        body.lr-body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(7, 11, 20, 0.95) 0%, #070b14 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .font-gamer { font-family: 'Rajdhani', sans-serif; }
+    </style>
+</head>
+<body class="lr-body">
+
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand lr-logo" th:href="@{/}">
+                <i class="bi bi-display lr-logo-icon"></i>
+                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/disponibilidad}">
+                            <i class="bi bi-cpu me-1"></i> Disponibilidad
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white fw-semibold px-3 py-2 rounded-3" style="background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);" th:href="@{/cliente/historial}">
+                            <i class="bi bi-clock-history me-1 text-info"></i> Mis Reservas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/operador/consola}">
+                            <i class="bi bi-shield-lock me-1"></i> Consola Operador
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
+                        <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
+                    </span>
+                    <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                    <a th:href="@{/auth/registro}" class="btn btn-sm lr-btn-primary">
+                        <i class="bi bi-person-plus"></i> Registrarme
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5">
+
+        <!-- Mensajes Flash de Éxito / Error -->
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10b981 !important; color: #a7f3d0;">
+            <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
+            <div th:text="${mensaje}">Operación exitosa.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(244, 63, 94, 0.15); border-left: 4px solid #f43f5e !important; color: #fecdd3;">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
+            <div th:text="${error}">Error en la consulta.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Banner / Hero con Buscador por Celular -->
+        <div class="lr-filter-card p-4 p-md-5 mb-5 position-relative overflow-hidden">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4);">
+                        <i class="bi bi-person-badge me-1"></i> Área de Cliente
+                    </span>
+                    <h1 class="lr-title-gradient display-6 mb-2">Historial de Reservas</h1>
+                    <p class="text-white-50 mb-0">
+                        Revisa el estado de tus bloques reservados, valida tus pagos pendientes y consulta tus horarios en el LAN Center.
+                    </p>
+                </div>
+
+                <div class="col-lg-6">
+                    <!-- Formulario de filtro por celular -->
+                    <form th:action="@{/cliente/historial}" method="get" class="row g-2 align-items-end">
+                        <div class="col-sm-8">
+                            <label for="celular" class="form-label text-white-50 small mb-1 fw-semibold">
+                                <i class="bi bi-phone me-1 text-info"></i> Consultar por Celular:
+                            </label>
+                            <div class="input-group lr-input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="tel" id="celular" name="celular" class="form-control" 
+                                       placeholder="Ingresa tu celular (ej: 987654321)" 
+                                       th:value="${celularBuscado}">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <button type="submit" class="btn lr-btn-primary w-100 py-2">
+                                <i class="bi bi-funnel"></i> Filtrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra informativa de resultados -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <h3 class="font-gamer mb-1 text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-list-stars text-info"></i> Registros de Sesión
+                </h3>
+                <p class="text-white-50 small mb-0" th:if="${usuario != null}">
+                    Mostrando reservas de <strong class="text-info" th:text="${usuario.nombre}">Cliente</strong> (<span th:text="${usuario.celular}">987654321</span>).
+                </p>
+                <p class="text-white-50 small mb-0" th:if="${usuario == null}">
+                    Mostrando el registro general de reservas del sistema.
+                </p>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <a th:href="@{/cliente/disponibilidad}" class="btn lr-btn-reserve">
+                    <i class="bi bi-plus-lg"></i> Nueva Reserva
+                </a>
+                <a th:if="${celularBuscado != null and !celularBuscado.isEmpty()}" th:href="@{/cliente/historial}" class="btn lr-btn-outline btn-sm">
+                    <i class="bi bi-x-circle"></i> Ver Todas
+                </a>
+            </div>
+        </div>
+
+        <!-- Tabla Estilizada de Historial -->
+        <div class="lr-card-static overflow-hidden mb-5">
+            <div class="p-3 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 font-gamer text-white text-uppercase letter-spacing-1">
+                    <i class="bi bi-receipt-cutoff me-2 text-info"></i> Detalle de Reservas
+                </h6>
+                <span class="text-white-50 small" th:text="${#lists.size(reservas)} + ' reserva(s)'">0 reservas</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table lr-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Máquina</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Canal</th>
+                            <th>Tarifa</th>
+                            <th>Estado de Reserva</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="r : ${reservas}">
+                            <td>
+                                <span class="badge font-gamer text-white-50" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);" th:text="'#' + ${r.id}">
+                                    #1
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-3 bg-secondary bg-opacity-25 p-2 text-info">
+                                        <i class="bi bi-pc"></i>
+                                    </div>
+                                    <span class="fw-bold font-gamer fs-5 text-white" 
+                                          th:text="${maquinasMap != null and maquinasMap.containsKey(r.maquinaId)} ? ${maquinasMap.get(r.maquinaId)} : ('ID: ' + ${r.maquinaId})">
+                                        M-01
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-light" th:text="${#temporals.format(r.fecha, 'dd/MM/yyyy')}">20/10/2026</span>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex align-items-center gap-1 text-white-50 small">
+                                    <i class="bi bi-clock text-info"></i>
+                                    <span class="text-light fw-medium" th:text="${r.horaInicio}">18:00</span>
+                                    <span>&rarr;</span>
+                                    <span class="text-light fw-medium" th:text="${r.horaFin}">19:00</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span th:if="${r.canal.name() == 'WEB'}" class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                    <i class="bi bi-globe me-1"></i> Web
+                                </span>
+                                <span th:if="${r.canal.name() == 'PRESENCIAL'}" class="badge bg-secondary-subtle text-light border border-secondary-subtle">
+                                    <i class="bi bi-shop me-1"></i> Presencial
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-white fw-semibold font-gamer" th:text="'S/ ' + ${r.costo}">S/ 5.00</span>
+                            </td>
+                            <td>
+                                <!-- Badges Luminosos de Estado de Reserva -->
+                                <span th:if="${r.estado.name() == 'PENDIENTE_PAGO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                    <i class="bi bi-hourglass-split me-1"></i> Pendiente de Pago
+                                </span>
+                                <span th:if="${r.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
+                                    <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
+                                </span>
+                                <span th:if="${r.estado.name() == 'COMPLETADA'}" class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                    <i class="bi bi-check2-all me-1"></i> Completada
+                                </span>
+                                <span th:if="${r.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
+                                    <i class="bi bi-x-circle me-1"></i> Cancelada
+                                </span>
+                                <span th:if="${r.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Vencida (No-Show)
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Mensaje si no hay reservas -->
+                        <tr th:if="${#lists.isEmpty(reservas)}">
+                            <td colspan="7" class="text-center text-white-50 py-5">
+                                <i class="bi bi-calendar-x fs-1 d-block mb-3 text-secondary"></i>
+                                No se encontraron reservas registradas.<br>
+                                <a th:href="@{/cliente/disponibilidad}" class="btn lr-btn-primary btn-sm mt-3">
+                                    <i class="bi bi-joystick me-1"></i> Explorar Máquinas y Reservar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="lr-footer mt-auto text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start mb-2 mb-md-0">
+                    <span class="font-gamer fs-6 text-white">LanReserve</span> &copy; 2026 &mdash; Plataforma de Gestión de Centros de Cómputo
+                </div>
+                <div class="col-md-6 text-md-end text-white-50">
+                    <i class="bi bi-shield-check text-info"></i> Reservas protegidas &bull; Control y validación en local
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

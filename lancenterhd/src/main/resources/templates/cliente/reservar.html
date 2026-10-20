@@ -1,54 +1,290 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservar maquina - LanReserve</title>
+    <title>Reservar Máquina - LanReserve</title>
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- LanReserve Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <style>
+        body.lr-body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(7, 11, 20, 0.95) 0%, #070b14 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .font-gamer { font-family: 'Rajdhani', sans-serif; }
+    </style>
 </head>
-<body class="bg-light">
+<body class="lr-body">
 
-<div class="container my-5">
-    <h1 class="mb-4">Reservar maquina</h1>
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand lr-logo" th:href="@{/}">
+                <i class="bi bi-display lr-logo-icon"></i>
+                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${maquina.codigo}">M-01</h5>
-            <p class="card-text mb-0" th:text="${maquina.especificaciones}">PC Gamer</p>
-            <span class="badge bg-secondary" th:text="${maquina.estado}">DISPONIBLE</span>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/disponibilidad}">
+                            <i class="bi bi-cpu me-1"></i> Disponibilidad
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/historial}">
+                            <i class="bi bi-clock-history me-1"></i> Mis Reservas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/operador/consola}">
+                            <i class="bi bi-shield-lock me-1"></i> Consola Operador
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
+                        <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
+                    </span>
+                    <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                    <a th:href="@{/auth/registro}" class="btn btn-sm lr-btn-primary">
+                        <i class="bi bi-person-plus"></i> Registrarme
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <form th:action="@{/cliente/reservar}" method="post" class="row g-3">
-        <input type="hidden" name="maquinaId" th:value="${maquina.id}">
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5">
 
-        <div class="col-md-6">
-            <label for="celular" class="form-label">Tu celular</label>
-            <input type="tel" id="celular" name="celular" class="form-control" required>
-            <div class="form-text">Con el que te registraste.</div>
+        <!-- Breadcrumb / Volver -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a th:href="@{/}" class="text-white-50 text-decoration-none">
+                        <i class="bi bi-house-door me-1"></i>Inicio
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/cliente/disponibilidad}" class="text-white-50 text-decoration-none">
+                        Disponibilidad
+                    </a>
+                </li>
+                <li class="breadcrumb-item active text-info" aria-current="page">
+                    Reservar Estación <span th:text="${maquina.codigo}">M-01</span>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row g-4 align-items-start">
+            
+            <!-- Columna Izquierda: Tarjeta de Resumen del Equipo (Glassmorphism & Specs) -->
+            <div class="col-lg-5 col-xl-4">
+                <div class="lr-summary-box mb-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3);">
+                                <i class="bi bi-cpu-fill me-1"></i> Estación de Juego
+                            </span>
+                            <h2 class="font-gamer display-5 text-white mb-0" th:text="${maquina.codigo}">M-01</h2>
+                        </div>
+                        <span th:if="${maquina.estado.name() == 'DISPONIBLE'}" class="badge lr-badge-glow lr-badge-available">
+                            <span class="lr-pulse-dot lr-pulse-available"></span> Lista
+                        </span>
+                        <span th:unless="${maquina.estado.name() == 'DISPONIBLE'}" class="badge lr-badge-glow lr-badge-occupied" th:text="${maquina.estado}">
+                            Ocupada
+                        </span>
+                    </div>
+
+                    <!-- Especificaciones -->
+                    <div class="mb-4">
+                        <h6 class="text-white-50 font-gamer text-uppercase small mb-2">Hardware & Zona</h6>
+                        <div class="p-3 rounded-3" style="background: rgba(0, 0, 0, 0.35); border: 1px solid rgba(255, 255, 255, 0.08);">
+                            <p class="mb-2 text-light fw-medium small" th:text="${maquina.especificaciones}">
+                                PC Gamer High-End, RTX 4070, 32GB RAM - Zona VIP
+                            </p>
+                            <div class="d-flex flex-wrap gap-1 mt-2">
+                                <span class="lr-spec-chip mb-0">
+                                    <i class="bi bi-gpu-card"></i> GPU Pro
+                                </span>
+                                <span class="lr-spec-chip mb-0">
+                                    <i class="bi bi-hdd-network"></i> Fibra 1Gbps
+                                </span>
+                                <span class="lr-spec-chip mb-0">
+                                    <i class="bi bi-headset"></i> Periféricos RGB
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen de Costo -->
+                    <div class="p-3 rounded-3 mb-4" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(0, 242, 254, 0.1) 100%); border: 1px solid rgba(99, 102, 241, 0.3);">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-white-50 small">Tarifa del Servicio</span>
+                            <span class="text-white fw-bold font-gamer fs-5">S/ 5.00 <small class="text-white-50 fw-normal fs-6">/ hora</small></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-white-50 small">Método de cobro</span>
+                            <span class="text-info small fw-semibold">Presencial en Mostrador</span>
+                        </div>
+                    </div>
+
+                    <!-- Reglas / Aviso -->
+                    <div class="text-white-50 small">
+                        <div class="d-flex align-items-start gap-2 mb-2">
+                            <i class="bi bi-shield-check text-info fs-5 mt-n1"></i>
+                            <span>La máquina queda <strong>reservada de inmediato</strong> tras enviar el formulario.</span>
+                        </div>
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-clock-history text-warning fs-5 mt-n1"></i>
+                            <span>Cuentas con 15 minutos de gracia a la hora acordada para validar el pago.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Formulario Limpio con Validaciones -->
+            <div class="col-lg-7 col-xl-8">
+                <div class="lr-filter-card p-4 p-md-5">
+                    
+                    <div class="border-bottom border-secondary border-opacity-25 pb-3 mb-4">
+                        <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <i class="bi bi-clipboard-check me-1"></i> Confirmación de Sesión
+                        </span>
+                        <h3 class="font-gamer text-white mb-1">Datos de tu Reserva</h3>
+                        <p class="text-white-50 small mb-0">
+                            Ingresa tu número de contacto y el rango horario para asegurar tu lugar.
+                        </p>
+                    </div>
+
+                    <!-- Formulario de Reserva hacia /cliente/reservar con los campos POST esperados -->
+                    <form th:action="@{/cliente/reservar}" method="post" class="needs-validation" novalidate id="formReserva">
+                        <!-- Campo oculto del ID de la máquina -->
+                        <input type="hidden" name="maquinaId" th:value="${maquina.id}">
+
+                        <div class="row g-4">
+                            <!-- Celular -->
+                            <div class="col-12">
+                                <label for="celular" class="form-label text-white-50 small fw-semibold">
+                                    <i class="bi bi-phone me-1 text-info"></i> Número de Celular del Cliente
+                                </label>
+                                <div class="input-group lr-input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone-fill"></i></span>
+                                    <input type="tel" id="celular" name="celular" class="form-control" 
+                                           placeholder="Ejemplo: 987654321" 
+                                           pattern="[0-9]{9}" 
+                                           maxlength="9" 
+                                           required>
+                                </div>
+                                <div class="form-text text-white-50 small mt-1">
+                                    <i class="bi bi-info-circle me-1 text-info"></i> Usa el número de celular con el que te registraste en la plataforma.
+                                </div>
+                            </div>
+
+                            <!-- Fecha -->
+                            <div class="col-md-12">
+                                <label for="fecha" class="form-label text-white-50 small fw-semibold">
+                                    <i class="bi bi-calendar-event me-1 text-info"></i> Fecha de la Sesión
+                                </label>
+                                <div class="input-group lr-input-group">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    <input type="date" id="fecha" name="fecha" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <!-- Hora Inicio y Hora Fin -->
+                            <div class="col-sm-6">
+                                <label for="horaInicio" class="form-label text-white-50 small fw-semibold">
+                                    <i class="bi bi-play-circle me-1 text-info"></i> Hora de Inicio
+                                </label>
+                                <div class="input-group lr-input-group">
+                                    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                                    <input type="time" id="horaInicio" name="horaInicio" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="horaFin" class="form-label text-white-50 small fw-semibold">
+                                    <i class="bi bi-stop-circle me-1 text-info"></i> Hora de Fin
+                                </label>
+                                <div class="input-group lr-input-group">
+                                    <span class="input-group-text"><i class="bi bi-clock-history"></i></span>
+                                    <input type="time" id="horaFin" name="horaFin" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <!-- Botones de Acción -->
+                            <div class="col-12 mt-4 pt-3 border-top border-secondary border-opacity-25 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                                <a th:href="@{/cliente/disponibilidad}" class="btn lr-btn-outline">
+                                    <i class="bi bi-arrow-left"></i> Cambiar Máquina
+                                </a>
+
+                                <button type="submit" class="btn lr-btn-primary px-4 py-2">
+                                    <i class="bi bi-check-lg"></i> Confirmar y Reservar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
 
-        <div class="col-md-6">
-            <label for="fecha" class="form-label">Fecha</label>
-            <input type="date" id="fecha" name="fecha" class="form-control" required>
-        </div>
+    </main>
 
-        <div class="col-md-6">
-            <label for="horaInicio" class="form-label">Hora de inicio</label>
-            <input type="time" id="horaInicio" name="horaInicio" class="form-control" required>
+    <!-- Footer -->
+    <footer class="lr-footer mt-auto text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start mb-2 mb-md-0">
+                    <span class="font-gamer fs-6 text-white">LanReserve</span> &copy; 2026 &mdash; Plataforma de Gestión de Centros de Cómputo
+                </div>
+                <div class="col-md-6 text-md-end text-white-50">
+                    <i class="bi bi-shield-lock text-info"></i> Canal Web &bull; Pago presencial validado por el operador
+                </div>
+            </div>
         </div>
+    </footer>
 
-        <div class="col-md-6">
-            <label for="horaFin" class="form-label">Hora de fin</label>
-            <input type="time" id="horaFin" name="horaFin" class="form-control" required>
-        </div>
-
-        <div class="col-12">
-            <button type="submit" class="btn btn-success">Confirmar reserva</button>
-            <a th:href="@{/cliente/disponibilidad}" class="btn btn-outline-secondary">Volver</a>
-        </div>
-    </form>
-</div>
-
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Establecer fecha de hoy por defecto si está vacía
+        document.addEventListener('DOMContentLoaded', function() {
+            var fechaInput = document.getElementById('fecha');
+            if (fechaInput && !fechaInput.value) {
+                var today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+        });
+    </script>
 </body>
 </html>
