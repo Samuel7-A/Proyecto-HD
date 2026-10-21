@@ -1,63 +1,300 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>Consola del Operador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consola del Operador - LanReserve</title>
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- LanReserve Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <style>
+        body.lr-body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(7, 11, 20, 0.95) 0%, #070b14 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .font-gamer { font-family: 'Rajdhani', sans-serif; }
+    </style>
 </head>
-<body>
+<body class="lr-body">
 
-    <h1>Consola del Operador</h1>
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand lr-logo" th:href="@{/}">
+                <i class="bi bi-display lr-logo-icon"></i>
+                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
 
-    <p th:if="${error}" th:text="${error}"></p>
-    <p th:if="${mensaje}" th:text="${mensaje}"></p>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/disponibilidad}">
+                            <i class="bi bi-cpu me-1"></i> Disponibilidad
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/historial}">
+                            <i class="bi bi-clock-history me-1"></i> Mis Reservas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white fw-semibold px-3 py-2 rounded-3" style="background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);" th:href="@{/operador/consola}">
+                            <i class="bi bi-shield-lock me-1 text-info"></i> Consola Operador
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/admin/panel}">
+                            <i class="bi bi-speedometer2 me-1"></i> Panel Admin
+                        </a>
+                    </li>
+                </ul>
 
-    <h2>Registrar Cliente Presencial</h2>
-    <form th:action="@{/operador/consola/registrar}" method="post">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" name="nombre" type="text" required>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <span class="badge rounded-pill bg-info-subtle text-info border border-info-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
+                        <i class="bi bi-person-badge me-1"></i> Operador en Turno
+                    </span>
+                    <a th:href="@{/}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-left"></i> Salir
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-        <label for="celular">Celular</label>
-        <input id="celular" name="celular" type="tel" required>
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5">
 
-        <input type="hidden" name="operadorId" th:value="${operadorId}">
-        <button type="submit">Registrar Cliente</button>
-    </form>
+        <!-- Mensajes Flash de Éxito / Error -->
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10b981 !important; color: #a7f3d0;">
+            <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
+            <div th:text="${mensaje}">Operación completada con éxito.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-    <h2>Reservas del Día</h2>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(244, 63, 94, 0.15); border-left: 4px solid #f43f5e !important; color: #fecdd3;">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
+            <div th:text="${error}">Ha ocurrido un error en la operación.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Cliente</th>
-                <th>Máquina</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="reserva : ${reservas}">
-                <td th:text="${reserva.id}"></td>
-                <td th:text="${nombresClientes.get(reserva.usuarioId)}"></td>
-                <td th:text="${codigosMaquinas.get(reserva.maquinaId)}"></td>
-                <td th:text="${reserva.fecha}"></td>
-                <td th:text="${reserva.horaInicio}"></td>
-                <td th:text="${reserva.estado}"></td>
-                <td>
-                    <form th:action="@{/operador/consola/validar-pago}" method="post">
-                        <input type="hidden" name="reservaId" th:value="${reserva.id}">
-                        <button type="submit">Validar Pago</button>
+        <!-- Header / Banner de la Consola -->
+        <div class="lr-filter-card p-4 p-md-5 mb-5 position-relative overflow-hidden">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe; border: 1px solid rgba(0, 242, 254, 0.3);">
+                        <i class="bi bi-headset me-1"></i> Mostrador Principal
+                    </span>
+                    <h1 class="lr-title-gradient display-6 mb-2">Consola de Operaciones</h1>
+                    <p class="text-white-50 mb-0">
+                        Gestión presencial de clientes: valida cobros en caja, libera máquinas por inasistencia (no-show) y registra usuarios en el mostrador.
+                    </p>
+                </div>
+                <div class="col-lg-5 text-lg-end">
+                    <div class="d-inline-flex flex-column align-items-lg-end gap-1 p-3 rounded-3" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);">
+                        <span class="text-white-50 small">Tiempo de gracia por reserva:</span>
+                        <span class="text-warning font-gamer fs-5 fw-bold">
+                            <i class="bi bi-stopwatch me-1"></i> 15 minutos máximo
+                        </span>
+                        <span class="text-white-50 small">Tras el plazo, marcar No-Show para liberar el equipo.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-start">
+            
+            <!-- Columna Izquierda: Registro Presencial de Clientes (CU-12) -->
+            <div class="col-lg-4">
+                <div class="lr-card-static p-4">
+                    <div class="border-bottom border-secondary border-opacity-25 pb-3 mb-4">
+                        <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <i class="bi bi-person-plus-fill me-1"></i> Mostrador
+                        </span>
+                        <h4 class="font-gamer text-white mb-1">Registrar Cliente</h4>
+                        <p class="text-white-50 small mb-0">
+                            Alta rápida para clientes presenciales sin cuenta web previa.
+                        </p>
+                    </div>
+
+                    <!-- Formulario de registro hacia /operador/consola/registrar -->
+                    <form th:action="@{/operador/consola/registrar}" method="post">
+                        <input type="hidden" name="operadorId" th:value="${operadorId}">
+
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label text-white-50 small fw-semibold">
+                                <i class="bi bi-person me-1 text-info"></i> Nombre Completo
+                            </label>
+                            <div class="input-group lr-input-group">
+                                <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+                                <input id="nombre" name="nombre" type="text" class="form-control" 
+                                       placeholder="Ej: Carlos Mendoza" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="celular" class="form-label text-white-50 small fw-semibold">
+                                <i class="bi bi-phone me-1 text-info"></i> Número de Celular
+                            </label>
+                            <div class="input-group lr-input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input id="celular" name="celular" type="tel" class="form-control" 
+                                       placeholder="9 dígitos" pattern="[0-9]{9}" maxlength="9" required>
+                            </div>
+                            <div class="form-text text-white-50 small mt-1">
+                                Servirá para identificar las futuras reservas del cliente.
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn lr-btn-primary w-100 py-2">
+                            <i class="bi bi-person-check-fill"></i> Registrar Cliente
+                        </button>
                     </form>
-                    <form th:action="@{/operador/consola/no-show}" method="post">
-                        <input type="hidden" name="reservaId" th:value="${reserva.id}">
-                        <button type="submit">Marcar No-Show</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            </div>
 
+            <!-- Columna Derecha: Reservas del Día y Validación de Pagos / No-Show -->
+            <div class="col-lg-8">
+                <div class="lr-card-static overflow-hidden">
+                    <div class="p-3 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 font-gamer text-white text-uppercase letter-spacing-1">
+                            <i class="bi bi-calendar2-week me-2 text-info"></i> Reservas y Control de Mostrador
+                        </h5>
+                        <span class="badge rounded-pill bg-dark border border-secondary text-white-50 small" 
+                              th:text="${#lists.size(reservas)} + ' reserva(s)'">
+                            0 reservas
+                        </span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table lr-table align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Máquina</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Estado</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="reserva : ${reservas}">
+                                    <td>
+                                        <span class="badge font-gamer text-white-50" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);" th:text="'#' + ${reserva.id}">
+                                            #1
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong class="text-light" 
+                                                th:text="${nombresClientes != null and nombresClientes.containsKey(reserva.usuarioId)} ? ${nombresClientes.get(reserva.usuarioId)} : ('Usuario #' + ${reserva.usuarioId})">
+                                            Cliente
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <span class="fw-bold font-gamer fs-5 text-info" 
+                                              th:text="${codigosMaquinas != null and codigosMaquinas.containsKey(reserva.maquinaId)} ? ${codigosMaquinas.get(reserva.maquinaId)} : ('PC #' + ${reserva.maquinaId})">
+                                            M-01
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-light" th:text="${reserva.fecha}">2026-01-01</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-light" th:text="${reserva.horaInicio}">18:00</span>
+                                    </td>
+                                    <td>
+                                        <span th:if="${reserva.estado.name() == 'PENDIENTE_PAGO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                            <i class="bi bi-hourglass-split me-1"></i> Pendiente
+                                        </span>
+                                        <span th:if="${reserva.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
+                                            <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
+                                        </span>
+                                        <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                            Completada
+                                        </span>
+                                        <span th:if="${reserva.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                            Vencida
+                                        </span>
+                                        <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
+                                            Cancelada
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-1 justify-content-end">
+                                            <!-- Formulario Validar Pago -->
+                                            <form th:action="@{/operador/consola/validar-pago}" method="post" class="d-inline">
+                                                <input type="hidden" name="reservaId" th:value="${reserva.id}">
+                                                <button type="submit" class="btn btn-sm lr-btn-reserve py-1 px-2" title="Validar Pago">
+                                                    <i class="bi bi-cash-coin me-1"></i> Cobrar
+                                                </button>
+                                            </form>
+
+                                            <!-- Formulario No-Show -->
+                                            <form th:action="@{/operador/consola/no-show}" method="post" class="d-inline">
+                                                <input type="hidden" name="reservaId" th:value="${reserva.id}">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" title="Marcar No-Show">
+                                                    <i class="bi bi-person-x"></i> No-Show
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Fila si no hay reservas -->
+                                <tr th:if="${#lists.isEmpty(reservas)}">
+                                    <td colspan="7" class="text-center text-white-50 py-5">
+                                        <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                                        No hay reservas pendientes por gestionar en este momento.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="lr-footer mt-auto text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start mb-2 mb-md-0">
+                    <span class="font-gamer fs-6 text-white">LanReserve</span> &copy; 2026 &mdash; Plataforma de Gestión de Centros de Cómputo
+                </div>
+                <div class="col-md-6 text-md-end text-white-50">
+                    <i class="bi bi-shield-lock text-info"></i> Consola Operativa &bull; Canal Presencial y Caja
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
