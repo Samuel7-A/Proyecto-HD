@@ -1,199 +1,532 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LanReserve - Panel de administracion</title>
+    <title>Panel de Administración - LanReserve</title>
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- LanReserve Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <style>
+        body.lr-body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(7, 11, 20, 0.95) 0%, #070b14 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .font-gamer { font-family: 'Rajdhani', sans-serif; }
+    </style>
 </head>
-<body class="bg-light">
+<body class="lr-body">
 
-<div class="container my-4">
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand lr-logo" th:href="@{/}">
+                <i class="bi bi-display lr-logo-icon"></i>
+                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-1">Panel de administracion</h1>
-            <p class="text-muted mb-0">Vision general del local para tomar decisiones.</p>
-        </div>
-        <a th:href="@{/}" class="btn btn-outline-secondary btn-sm">Volver al inicio</a>
-    </div>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/disponibilidad}">
+                            <i class="bi bi-cpu me-1"></i> Disponibilidad
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/historial}">
+                            <i class="bi bi-clock-history me-1"></i> Mis Reservas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/operador/consola}">
+                            <i class="bi bi-shield-lock me-1"></i> Consola Operador
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white fw-semibold px-3 py-2 rounded-3" style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35);" th:href="@{/admin/panel}">
+                            <i class="bi bi-speedometer2 me-1 text-warning"></i> Panel Admin
+                        </a>
+                    </li>
+                </ul>
 
-    <!-- Indicadores principales -->
-    <div class="row g-3 mb-4">
-
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <p class="text-muted text-uppercase small mb-1">Maquinas</p>
-                    <p class="display-6 fw-bold mb-0" th:text="${totalMaquinas}">0</p>
-                    <p class="small text-muted mb-0">
-                        <span th:text="${maquinasDisponibles}">0</span> disponibles
-                    </p>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <span class="badge rounded-pill bg-purple-subtle text-light border border-secondary px-3 py-2 d-none d-md-inline-flex align-items-center me-2" style="background: rgba(139, 92, 246, 0.2);">
+                        <i class="bi bi-shield-check me-1 text-warning"></i> Modo Administrador
+                    </span>
+                    <a th:href="@{/}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-left"></i> Salir al Inicio
+                    </a>
                 </div>
             </div>
         </div>
+    </nav>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <p class="text-muted text-uppercase small mb-1">Reservas</p>
-                    <p class="display-6 fw-bold mb-0" th:text="${totalReservas}">0</p>
-                    <p class="small text-muted mb-0">
-                        <span th:text="${reservasHoy}">0</span> para hoy
-                    </p>
-                </div>
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5">
+
+        <!-- Header / Título del Panel -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4);">
+                    <i class="bi bi-graph-up-arrow me-1"></i> Métricas Operativas
+                </span>
+                <h1 class="lr-title-gradient display-6 mb-1">Panel de Control & Ocupación</h1>
+                <p class="text-white-50 mb-0">
+                    Visión global del local en tiempo real: máquinas activas, volumen de reservas y recaudación.
+                </p>
+            </div>
+            <div>
+                <button type="button" class="btn lr-btn-outline" onclick="window.location.reload();">
+                    <i class="bi bi-arrow-clockwise"></i> Actualizar Métricas
+                </button>
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <p class="text-muted text-uppercase small mb-1">Clientes</p>
-                    <p class="display-6 fw-bold mb-0" th:text="${totalClientes}">0</p>
-                    <p class="small text-muted mb-0">
-                        de <span th:text="${totalUsuarios}">0</span> usuarios
-                    </p>
+        <!-- Indicadores Principales (KPI Cards) -->
+        <div class="row g-3 g-md-4 mb-4">
+            
+            <!-- Total Máquinas -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="lr-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-white-50 font-gamer text-uppercase small">Estaciones</span>
+                        <div class="rounded-3 p-2" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">
+                            <i class="bi bi-pc-display fs-5"></i>
+                        </div>
+                    </div>
+                    <div class="font-gamer display-5 fw-bold text-white mb-1" th:text="${totalMaquinas}">0</div>
+                    <div class="d-flex align-items-center gap-2 small">
+                        <span class="badge lr-badge-available px-2 py-1">
+                            <span class="lr-pulse-dot lr-pulse-available"></span> <span th:text="${maquinasDisponibles}">0</span> libres
+                        </span>
+                        <span class="text-white-50">en sala</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <p class="text-muted text-uppercase small mb-1">Cobrado</p>
-                    <p class="display-6 fw-bold mb-0">
+            <!-- Reservas Totales & Hoy -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="lr-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-white-50 font-gamer text-uppercase small">Reservas</span>
+                        <div class="rounded-3 p-2" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                            <i class="bi bi-calendar2-check fs-5"></i>
+                        </div>
+                    </div>
+                    <div class="font-gamer display-5 fw-bold text-white mb-1" th:text="${totalReservas}">0</div>
+                    <div class="d-flex align-items-center gap-2 small">
+                        <span class="badge px-2 py-1" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                            <i class="bi bi-lightning-fill text-warning me-1"></i> <span th:text="${reservasHoy}">0</span> para hoy
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clientes Registrados -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="lr-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-white-50 font-gamer text-uppercase small">Clientes Registrados</span>
+                        <div class="rounded-3 p-2" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                            <i class="bi bi-people fs-5"></i>
+                        </div>
+                    </div>
+                    <div class="font-gamer display-5 fw-bold text-white mb-1" th:text="${totalClientes}">0</div>
+                    <div class="d-flex align-items-center gap-1 small text-white-50">
+                        <span>de</span>
+                        <strong class="text-light" th:text="${totalUsuarios}">0</strong>
+                        <span>usuarios totales</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recaudación Efectiva -->
+            <div class="col-sm-6 col-lg-3">
+                <div class="lr-card p-4 h-100 position-relative overflow-hidden" style="border-color: rgba(245, 158, 11, 0.35);">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="text-white-50 font-gamer text-uppercase small">Recaudación Cobrada</span>
+                        <div class="rounded-3 p-2" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                            <i class="bi bi-cash-coin fs-5"></i>
+                        </div>
+                    </div>
+                    <div class="font-gamer display-5 fw-bold text-warning mb-1">
                         S/ <span th:text="${#numbers.formatDecimal(ingresos, 1, 2)}">0.00</span>
+                    </div>
+                    <div class="small text-white-50">
+                        <i class="bi bi-check-all text-success me-1"></i> Solo cobros validados
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Fila de Gráficos de Ocupación y Reservas por Estado -->
+        <div class="row g-4 mb-5">
+            
+            <!-- Ocupación del Local (Barras de Progreso con Porcentajes Calculados) -->
+            <div class="col-lg-6">
+                <div class="lr-card-static p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="font-gamer text-white mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-pie-chart text-info"></i> Ocupación del Salón
+                        </h4>
+                        <span class="badge rounded-pill bg-dark border border-secondary text-white-50 small">
+                            Capacidad: <strong class="text-white" th:text="${totalMaquinas}">0</strong> PCs
+                        </span>
+                    </div>
+                    <p class="text-white-50 small mb-4">
+                        Distribución actual de las estaciones de juego según su estado operativo.
                     </p>
-                    <p class="small text-muted mb-0">reservas pagadas y completadas</p>
+
+                    <!-- Barra Disponibles -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center small mb-2">
+                            <span class="d-flex align-items-center gap-2">
+                                <span class="lr-pulse-dot lr-pulse-available"></span>
+                                <strong class="text-light">Disponibles</strong>
+                            </span>
+                            <div>
+                                <span class="fw-bold text-success font-gamer fs-6" th:text="${maquinasDisponibles} + ' PCs'">0 PCs</span>
+                                <span class="text-white-50 ms-1 small" 
+                                      th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasDisponibles * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
+                            </div>
+                        </div>
+                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
+                            <div class="progress-bar rounded-pill" role="progressbar"
+                                 style="background: linear-gradient(90deg, #10b981 0%, #34d399 100%); box-shadow: 0 0 10px rgba(16,185,129,0.5);"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasDisponibles * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #10b981 0%, #34d399 100%); box-shadow: 0 0 10px rgba(16,185,129,0.5);'">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra Ocupadas -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center small mb-2">
+                            <span class="d-flex align-items-center gap-2">
+                                <span class="lr-pulse-dot lr-pulse-occupied"></span>
+                                <strong class="text-light">En Juego / Ocupadas</strong>
+                            </span>
+                            <div>
+                                <span class="fw-bold text-danger font-gamer fs-6" th:text="${maquinasOcupadas} + ' PCs'">0 PCs</span>
+                                <span class="text-white-50 ms-1 small" 
+                                      th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasOcupadas * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
+                            </div>
+                        </div>
+                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
+                            <div class="progress-bar rounded-pill" role="progressbar"
+                                 style="background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasOcupadas * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);'">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra Mantenimiento -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between align-items-center small mb-2">
+                            <span class="d-flex align-items-center gap-2">
+                                <span class="lr-pulse-dot lr-pulse-maintenance"></span>
+                                <strong class="text-light">En Mantenimiento Técnico</strong>
+                            </span>
+                            <div>
+                                <span class="fw-bold text-warning font-gamer fs-6" th:text="${maquinasMantenimiento} + ' PCs'">0 PCs</span>
+                                <span class="text-white-50 ms-1 small" 
+                                      th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasMantenimiento * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
+                            </div>
+                        </div>
+                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
+                            <div class="progress-bar rounded-pill" role="progressbar"
+                                 style="background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasMantenimiento * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);'">
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
 
-    </div>
-
-    <div class="row g-3 mb-4">
-
-        <!-- Ocupacion del local -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5 card-title mb-3">Ocupacion del local</h2>
-
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small mb-1">
-                            <span>Disponibles</span>
-                            <span th:text="${maquinasDisponibles}">0</span>
-                        </div>
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasDisponibles * 100 / totalMaquinas) : 0} + '%'"></div>
-                        </div>
+            <!-- Reservas por Estado -->
+            <div class="col-lg-6">
+                <div class="lr-card-static p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="font-gamer text-white mb-0 d-flex align-items-center gap-2">
+                            <i class="bi bi-stack text-info"></i> Balance de Reservas
+                        </h4>
+                        <span class="badge rounded-pill bg-dark border border-secondary text-white-50 small">
+                            Total: <strong class="text-white" th:text="${totalReservas}">0</strong>
+                        </span>
                     </div>
+                    <p class="text-white-50 small mb-3">
+                        Distribución del ciclo de vida de las reservas registradas en el sistema.
+                    </p>
 
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between small mb-1">
-                            <span>Ocupadas</span>
-                            <span th:text="${maquinasOcupadas}">0</span>
-                        </div>
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-danger" role="progressbar"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasOcupadas * 100 / totalMaquinas) : 0} + '%'"></div>
-                        </div>
-                    </div>
+                    <ul class="list-group list-group-flush bg-transparent">
+                        
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-secondary border-opacity-25">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge lr-badge-glow lr-badge-maintenance">
+                                    <i class="bi bi-hourglass-split me-1"></i> Pendiente de Pago
+                                </span>
+                                <small class="text-white-50 d-none d-sm-inline">Esperando validación en caja</small>
+                            </div>
+                            <span class="font-gamer fs-5 fw-bold text-warning" th:text="${reservasPendientes}">0</span>
+                        </li>
 
-                    <div class="mb-0">
-                        <div class="d-flex justify-content-between small mb-1">
-                            <span>En mantenimiento</span>
-                            <span th:text="${maquinasMantenimiento}">0</span>
-                        </div>
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-warning" role="progressbar"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasMantenimiento * 100 / totalMaquinas) : 0} + '%'"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-secondary border-opacity-25">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge lr-badge-glow lr-badge-available">
+                                    <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
+                                </span>
+                                <small class="text-white-50 d-none d-sm-inline">Confirmadas para jugar</small>
+                            </div>
+                            <span class="font-gamer fs-5 fw-bold text-success" th:text="${reservasPagadas}">0</span>
+                        </li>
 
-        <!-- Reservas por estado -->
-        <div class="col-lg-6">
-            <div class="card shadow-sm h-100">
-                <div class="card-body">
-                    <h2 class="h5 card-title mb-3">Reservas por estado</h2>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="badge text-bg-warning">Pendiente de pago</span>
-                            <span class="fw-bold" th:text="${reservasPendientes}">0</span>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-secondary border-opacity-25">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                    <i class="bi bi-check2-all me-1"></i> Completada
+                                </span>
+                                <small class="text-white-50 d-none d-sm-inline">Sesiones finalizadas</small>
+                            </div>
+                            <span class="font-gamer fs-5 fw-bold text-info" th:text="${reservasCompletadas}">0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="badge text-bg-success">Pagado</span>
-                            <span class="fw-bold" th:text="${reservasPagadas}">0</span>
+
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-secondary border-opacity-25">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge lr-badge-glow lr-badge-occupied">
+                                    <i class="bi bi-exclamation-triangle me-1"></i> Vencida (No-Show)
+                                </span>
+                                <small class="text-white-50 d-none d-sm-inline">Expiró tiempo de gracia</small>
+                            </div>
+                            <span class="font-gamer fs-5 fw-bold text-danger" th:text="${reservasVencidas}">0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="badge text-bg-secondary">Completada</span>
-                            <span class="fw-bold" th:text="${reservasCompletadas}">0</span>
+
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-0">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-secondary text-secondary-emphasis">
+                                    <i class="bi bi-x-circle me-1"></i> Cancelada
+                                </span>
+                                <small class="text-white-50 d-none d-sm-inline">Por usuario o sistema</small>
+                            </div>
+                            <span class="font-gamer fs-5 fw-bold text-white-50" th:text="${reservasCanceladas}">0</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="badge text-bg-danger">Vencida</span>
-                            <span class="fw-bold" th:text="${reservasVencidas}">0</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                            <span class="badge text-bg-dark">Cancelada</span>
-                            <span class="fw-bold" th:text="${reservasCanceladas}">0</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>
+
         </div>
 
-    </div>
+        <!-- Tabla Completa de Detalle de Reservas con Filtro y Buscador en Tiempo Real -->
+        <div class="lr-card-static overflow-hidden mb-5">
+            <div class="p-4 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25">
+                <div class="row align-items-center g-3">
+                    <div class="col-md-5">
+                        <h4 class="font-gamer text-white mb-1 d-flex align-items-center gap-2">
+                            <i class="bi bi-receipt text-info"></i> Registro General de Reservas
+                        </h4>
+                        <p class="text-white-50 small mb-0">
+                            Auditoría de reservas con cliente, máquina asignada y montos.
+                        </p>
+                    </div>
 
-    <!-- Detalle de reservas -->
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h2 class="h5 card-title mb-3">Todas las reservas</h2>
+                    <!-- Buscador en tiempo real -->
+                    <div class="col-md-7">
+                        <div class="d-flex gap-2">
+                            <div class="input-group lr-input-group flex-grow-1">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" id="filtroReservas" class="form-control" 
+                                       placeholder="Buscar por cliente, máquina o estado...">
+                            </div>
+                            <select id="filtroEstado" class="form-select bg-dark text-light border-secondary border-opacity-50" style="width: auto;">
+                                <option value="">Todos los estados</option>
+                                <option value="PENDIENTE_PAGO">Pendiente de pago</option>
+                                <option value="PAGADO">Pagado</option>
+                                <option value="COMPLETADA">Completada</option>
+                                <option value="VENCIDA">Vencida</option>
+                                <option value="CANCELADA">Cancelada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <p class="text-muted" th:if="${#lists.isEmpty(reservas)}">
-                Todavia no hay reservas registradas.
-            </p>
-
-            <div class="table-responsive" th:unless="${#lists.isEmpty(reservas)}">
-                <table class="table table-sm table-hover align-middle mb-0">
-                    <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Maquina</th>
-                        <th>Fecha</th>
-                        <th>Horario</th>
-                        <th>Canal</th>
-                        <th>Estado</th>
-                    </tr>
+            <!-- Tabla -->
+            <div class="table-responsive">
+                <table class="table lr-table align-middle" id="tablaReservas">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Máquina</th>
+                            <th>Fecha</th>
+                            <th>Horario</th>
+                            <th>Canal</th>
+                            <th>Costo</th>
+                            <th>Estado</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="reserva : ${reservas}">
-                        <td th:text="${reserva.id}"></td>
-                        <td th:text="${nombresClientes.get(reserva.usuarioId)}"></td>
-                        <td th:text="${codigosMaquinas.get(reserva.maquinaId)}"></td>
-                        <td th:text="${reserva.fecha}"></td>
-                        <td>
-                            <span th:text="${reserva.horaInicio}"></span> -
-                            <span th:text="${reserva.horaFin}"></span>
-                        </td>
-                        <td th:text="${reserva.canal}"></td>
-                        <td>
-                            <span class="badge"
-                                  th:classappend="${'text-bg-' + coloresEstado.get(reserva.estado)}"
-                                  th:text="${reserva.estado}"></span>
-                        </td>
-                    </tr>
+                        <tr th:each="reserva : ${reservas}" th:attr="data-estado=${reserva.estado}">
+                            <td>
+                                <span class="badge font-gamer text-white-50" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);" th:text="'#' + ${reserva.id}">
+                                    #1
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle p-1 bg-secondary bg-opacity-25 text-info">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <strong class="text-light" th:text="${nombresClientes.get(reserva.usuarioId)}">Cliente</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-1">
+                                    <span class="fw-bold font-gamer fs-5 text-info" th:text="${codigosMaquinas.get(reserva.maquinaId)}">M-01</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-light" th:text="${reserva.fecha}">2026-10-20</span>
+                            </td>
+                            <td>
+                                <div class="d-inline-flex align-items-center gap-1 text-white-50 small">
+                                    <i class="bi bi-clock text-info"></i>
+                                    <span class="text-light" th:text="${reserva.horaInicio}">18:00</span>
+                                    <span>&rarr;</span>
+                                    <span class="text-light" th:text="${reserva.horaFin}">19:00</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span th:if="${reserva.canal != null and reserva.canal.name() == 'WEB'}" class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                    <i class="bi bi-globe me-1"></i> Web
+                                </span>
+                                <span th:if="${reserva.canal != null and reserva.canal.name() == 'PRESENCIAL'}" class="badge bg-secondary-subtle text-light border border-secondary-subtle">
+                                    <i class="bi bi-shop me-1"></i> Presencial
+                                </span>
+                            </td>
+                            <td>
+                                <span class="font-gamer fw-semibold text-white" th:text="'S/ ' + ${reserva.costo != null ? #numbers.formatDecimal(reserva.costo, 1, 2) : '5.00'}">S/ 5.00</span>
+                            </td>
+                            <td>
+                                <!-- Nombres de estado legibles con badges luminosos -->
+                                <span th:if="${reserva.estado.name() == 'PENDIENTE_PAGO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                    <i class="bi bi-hourglass-split me-1"></i> Pendiente de pago
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
+                                    <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                    <i class="bi bi-check2-all me-1"></i> Completada
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                    <i class="bi bi-exclamation-triangle me-1"></i> Vencida
+                                </span>
+                                <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
+                                    <i class="bi bi-x-circle me-1"></i> Cancelada
+                                </span>
+                            </td>
+                        </tr>
+
+                        <!-- Fila cuando la lista está vacía -->
+                        <tr th:if="${#lists.isEmpty(reservas)}" id="filaSinReservas">
+                            <td colspan="8" class="text-center text-white-50 py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                                Todavía no hay reservas registradas en el sistema.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="p-3 bg-dark bg-opacity-25 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <span class="text-white-50 small" id="contadorFiltrado" th:text="${#lists.size(reservas)} + ' registros totales'">0 registros</span>
+                <span class="text-white-50 small">
+                    <i class="bi bi-lock me-1"></i> Panel en modo auditoría (solo lectura)
+                </span>
+            </div>
         </div>
-    </div>
 
-</div>
+    </main>
 
+    <!-- Footer -->
+    <footer class="lr-footer mt-auto text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start mb-2 mb-md-0">
+                    <span class="font-gamer fs-6 text-white">LanReserve</span> &copy; 2026 &mdash; Plataforma de Gestión de Centros de Cómputo
+                </div>
+                <div class="col-md-6 text-md-end text-white-50">
+                    <i class="bi bi-shield-check text-warning"></i> Módulo Administrativo &bull; Datos sincronizados con base de datos
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script de filtrado y búsqueda en tiempo real -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const buscador = document.getElementById('filtroReservas');
+            const selectorEstado = document.getElementById('filtroEstado');
+            const tabla = document.getElementById('tablaReservas');
+            const contador = document.getElementById('contadorFiltrado');
+            if (!tabla) return;
+
+            const filas = tabla.querySelectorAll('tbody tr:not(#filaSinReservas)');
+
+            function filtrar() {
+                const query = buscador.value.toLowerCase().trim();
+                const estado = selectorEstado.value;
+                let visibles = 0;
+
+                filas.forEach(fila => {
+                    const textoFila = fila.innerText.toLowerCase();
+                    const estadoFila = fila.getAttribute('data-estado');
+
+                    const coincideTexto = query === '' || textoFila.includes(query);
+                    const coincideEstado = estado === '' || estadoFila === estado;
+
+                    if (coincideTexto && coincideEstado) {
+                        fila.style.display = '';
+                        visibles++;
+                    } else {
+                        fila.style.display = 'none';
+                    }
+                });
+
+                if (contador) {
+                    contador.textContent = `${visibles} registro(s) mostrado(s) de ${filas.length}`;
+                }
+            }
+
+            buscador.addEventListener('input', filtrar);
+            selectorEstado.addEventListener('change', filtrar);
+        });
+    </script>
 </body>
 </html>
