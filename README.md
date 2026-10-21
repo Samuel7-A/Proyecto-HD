@@ -4,7 +4,7 @@ Plataforma web para la reserva de máquinas en centros de cómputo y lan centers
 
 **Curso:** Herramientas de Desarrollo (100000S61T) — Universidad Tecnológica del Perú (UTP)
 **Ciclo:** 2026 – Ciclo 2 (Agosto) · **Carrera:** Ingeniería de Software / Sistemas e Informática
-**Etapa actual:** Avance de Proyecto Final 1 (APF1 — Semana 6)
+**Etapa actual:** Avance de Proyecto Final 2 (APF2 — Semana 11)
 
 ---
 
@@ -93,9 +93,9 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 | Backend | Spring Boot 4 (Java 21) |
 | Frontend | Thymeleaf (server-side, una sola app) |
 | Base de datos | MySQL 8 |
-| Contenedores | Docker + Docker Compose |
-| CI/CD | GitHub Actions |
-| Despliegue | Render / Railway (planeado, Unidad 3) |
+| Contenedores | Docker + Docker Compose (configurado) |
+| CI/CD | GitHub Actions (activo) |
+| Despliegue | Render / Railway (pendiente) |
 
 ---
 
@@ -103,9 +103,11 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 
 ```
 Proyecto-HD/
-├── lancenterhd/        # Aplicación Spring Boot (backend + vistas Thymeleaf)
+├── lancenterhd/       # Aplicación Spring Boot (backend + vistas Thymeleaf)
 │   ├── src/main/java/com/lancenter/lancenterhd/
 │   ├── src/main/resources/
+│   ├── src/test/
+│   ├── mvnw / mvnw.cmd
 │   └── pom.xml
 ├── docs/               # Documentación del proyecto (en construcción)
 ├── CONTRIBUTING.md
@@ -119,17 +121,28 @@ Proyecto-HD/
 ### Requisitos
 
 - JDK 21
-- Maven 3.9+
+- Maven 3.9+ (se incluye el wrapper `mvnw`)
 - MySQL 8 en `localhost:3306` (base de datos `lancenterhd`)
 
-### Ejecutar la app
+### Ejecutar la aplicación
 
 ```bash
 cd lancenterhd
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-- App: http://localhost:8080
+En Windows, usar `.\mvnw.cmd spring-boot:run`.
+
+- Aplicación: http://localhost:8080
+
+### Ejecutar las pruebas
+
+```bash
+cd lancenterhd
+./mvnw test
+```
+
+En Windows, usar `.\mvnw.cmd test`.
 
 ---
 
@@ -145,7 +158,7 @@ mvn spring-boot:run
 - Cada funcionalidad se desarrolla en su rama `feature/` y se fusiona a `develop` vía Pull Request, con revisión de al menos un compañero.
 - Los commits usan mensajes semánticos: `feat:`, `fix:`, `docs:`, `refactor:`.
 - Los conflictos de merge se resuelven documentando la decisión en el PR.
-- Cada avance se etiqueta con un tag/release (`v0.1.0` para el APF1).
+- Cada avance se etiqueta con un tag/release (`v0.2.0` para el APF2 (objetivo)).
 
 ---
 
@@ -180,8 +193,9 @@ mvn spring-boot:run
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
 - [x] Esqueleto Spring Boot + Thymeleaf compilando
 - [x] Modelo de datos (3 entidades: Usuario, Maquina, Reserva) y doble canal (WEB/PRESENCIAL)
-- [ ] Autenticación de clientes (parcial: falta módulo Administrador)
-- [ ] Módulo Operador (parcial: Validar Pago y Marcar No-Show pendientes)
-- [ ] Vistas Thymeleaf de Cliente y Operador (parcial: falta Administrador)
-- [ ] Docker y CI/CD (parcial: falta despliegue)
-- [ ] APF1 — tag `v0.1.0`
+- [x] Autenticación de clientes y Administrador
+- [x] Módulo Operador (validar pago, liberar máquina y marcar no-show)
+- [x] Vistas Thymeleaf de Cliente, Operador y Administrador
+- [x] Docker y CI/CD (Docker + Compose operativo; CI activo en cada push; CD pendiente para APF3)
+- [x] APF2 — tag `v0.2.0` publicado
+
