@@ -6,6 +6,7 @@ import com.lancenter.lancenterhd.model.Usuario;
 import com.lancenter.lancenterhd.repository.MaquinaRepository;
 import com.lancenter.lancenterhd.repository.ReservaRepository;
 import com.lancenter.lancenterhd.repository.UsuarioRepository;
+import com.lancenter.lancenterhd.security.SesionUsuario;
 import com.lancenter.lancenterhd.service.UsuarioService;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
@@ -29,8 +30,9 @@ class OperadorControllerTest {
     private final UsuarioRepository usuarioRepository = mock(UsuarioRepository.class);
     private final ReservaRepository reservaRepository = mock(ReservaRepository.class);
     private final MaquinaRepository maquinaRepository = mock(MaquinaRepository.class);
+    private final SesionUsuario sesionUsuario = mock(SesionUsuario.class);
     private final OperadorController controller =
-            new OperadorController(usuarioService, usuarioRepository, reservaRepository, maquinaRepository);
+            new OperadorController(usuarioService, usuarioRepository, reservaRepository, maquinaRepository, sesionUsuario);
 
     @Test
     void mostrarConsolaPasaLasReservasYTraduceLosIdentificadores() {
@@ -40,12 +42,11 @@ class OperadorControllerTest {
         when(usuarioRepository.findAll()).thenReturn(List.of());
         when(maquinaRepository.findAll()).thenReturn(List.of());
 
-        assertEquals("operador/consola", controller.mostrarConsola(12L, modelo));
+        assertEquals("operador/consola", controller.mostrarConsola(modelo));
 
         verify(modelo).addAttribute("reservas", reservas);
         verify(modelo).addAttribute(eq("nombresClientes"), any());
         verify(modelo).addAttribute(eq("codigosMaquinas"), any());
-        verify(modelo).addAttribute("operadorId", 12L);
     }
 
     @Test
@@ -88,12 +89,15 @@ class OperadorControllerTest {
     }
 
     @Test
-    void registrarPresencialConstruyeElUsuarioConElServicioYDespuesLoGuarda() {
+    void registrarPresencialUsaElOperadorDeLaSesion() {
+        Usuario operador = new Usuario();
+        operador.setId(12L);
+        when(sesionUsuario.usuarioActual()).thenReturn(Optional.of(operador));
+
         Usuario usuario = new Usuario();
         when(usuarioService.registrarPresencial("Ana", "987654321", 12L)).thenReturn(usuario);
 
-        assertEquals("redirect:/operador/consola?operadorId=12",
-                controller.registrarPresencial("Ana", "987654321", 12L));
+        assertEquals("redirect:/operador/consola", controller.registrarPresencial("Ana", "987654321"));
 
         var orden = inOrder(usuarioService, usuarioRepository);
         orden.verify(usuarioService).registrarPresencial("Ana", "987654321", 12L);

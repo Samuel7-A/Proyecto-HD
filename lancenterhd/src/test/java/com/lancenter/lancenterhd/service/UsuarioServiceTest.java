@@ -3,6 +3,7 @@ package com.lancenter.lancenterhd.service;
 import com.lancenter.lancenterhd.enums.Rol;
 import com.lancenter.lancenterhd.model.Usuario;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class UsuarioServiceTest {
 
-    private final UsuarioService servicio = new UsuarioService();
+    private final UsuarioService servicio = new UsuarioService(new BCryptPasswordEncoder());
 
     @Test
     void laClaveNoSeGuardaEnTextoPlano() {

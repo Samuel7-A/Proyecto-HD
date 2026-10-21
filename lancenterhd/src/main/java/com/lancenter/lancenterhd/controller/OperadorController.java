@@ -7,6 +7,7 @@ import com.lancenter.lancenterhd.model.Usuario;
 import com.lancenter.lancenterhd.repository.MaquinaRepository;
 import com.lancenter.lancenterhd.repository.ReservaRepository;
 import com.lancenter.lancenterhd.repository.UsuarioRepository;
+import com.lancenter.lancenterhd.security.SesionUsuario;
 import com.lancenter.lancenterhd.service.UsuarioService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,23 +29,25 @@ public class OperadorController {
     private final UsuarioRepository usuarioRepository;
     private final ReservaRepository reservaRepository;
     private final MaquinaRepository maquinaRepository;
+    private final SesionUsuario sesionUsuario;
 
     public OperadorController(UsuarioService usuarioService,
                               UsuarioRepository usuarioRepository,
                               ReservaRepository reservaRepository,
-                              MaquinaRepository maquinaRepository) {
+                              MaquinaRepository maquinaRepository,
+                              SesionUsuario sesionUsuario) {
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
         this.reservaRepository = reservaRepository;
         this.maquinaRepository = maquinaRepository;
+        this.sesionUsuario = sesionUsuario;
     }
 
     @GetMapping("/consola")
-    public String mostrarConsola(@RequestParam(required = false) Long operadorId, Model modelo) {
+    public String mostrarConsola(Model modelo) {
         modelo.addAttribute("reservas", reservaRepository.findAll());
         modelo.addAttribute("nombresClientes", nombresDeClientes());
         modelo.addAttribute("codigosMaquinas", codigosDeMaquinas());
-        modelo.addAttribute("operadorId", operadorId);
         return "operador/consola";
     }
 
@@ -62,13 +65,13 @@ public class OperadorController {
 
     @PostMapping("/consola/registrar")
     public String registrarPresencial(@RequestParam String nombre,
-                                      @RequestParam String celular,
-                                      @RequestParam(required = false) Long operadorId) {
+                                      @RequestParam String celular) {
+        Long operadorId = sesionUsuario.usuarioActual()
+                .map(Usuario::getId)
+                .orElse(null);
         Usuario usuario = usuarioService.registrarPresencial(nombre, celular, operadorId);
         usuarioRepository.save(usuario);
-        return operadorId == null
-                ? "redirect:/operador/consola"
-                : "redirect:/operador/consola?operadorId=" + operadorId;
+        return "redirect:/operador/consola";
     }
 
     /**

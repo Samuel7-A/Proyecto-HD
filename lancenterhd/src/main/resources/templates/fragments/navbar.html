@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Fragmento compartido del navbar. Recibe:
+    - paginaActiva: clave de la pagina actual para resaltar su enlace.
+  Lee del modelo (expuestos por AtributosVista):
+    - autenticado, rolActual (ADMIN/OPERADOR/CLIENTE) y nombreUsuario.
+-->
+<nav th:fragment="navbar(paginaActiva)" class="navbar navbar-expand-lg lr-navbar sticky-top">
+    <div class="container">
+        <a class="navbar-brand lr-logo" th:href="@{/}">
+            <i class="bi bi-display lr-logo-icon"></i>
+            <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+        </a>
+
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list text-light fs-3"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded-3"
+                       th:classappend="${paginaActiva == 'inicio'} ? ' active text-white fw-semibold' : ' text-white-50'"
+                       th:style="${paginaActiva == 'inicio'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
+                       th:href="@{/}">
+                        <i class="bi bi-house-door me-1" th:classappend="${paginaActiva == 'inicio'} ? ' text-info' : ''"></i> Inicio
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 rounded-3"
+                       th:classappend="${paginaActiva == 'disponibilidad'} ? ' active text-white fw-semibold' : ' text-white-50'"
+                       th:style="${paginaActiva == 'disponibilidad'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
+                       th:href="@{/cliente/disponibilidad}">
+                        <i class="bi bi-cpu me-1" th:classappend="${paginaActiva == 'disponibilidad'} ? ' text-info' : ''"></i> Disponibilidad
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${autenticado and rolActual == 'CLIENTE'}">
+                    <a class="nav-link px-3 py-2 rounded-3"
+                       th:classappend="${paginaActiva == 'historial'} ? ' active text-white fw-semibold' : ' text-white-50'"
+                       th:style="${paginaActiva == 'historial'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
+                       th:href="@{/cliente/historial}">
+                        <i class="bi bi-clock-history me-1" th:classappend="${paginaActiva == 'historial'} ? ' text-info' : ''"></i> Mis Reservas
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${rolActual == 'OPERADOR'}">
+                    <a class="nav-link px-3 py-2 rounded-3"
+                       th:classappend="${paginaActiva == 'operador'} ? ' active text-white fw-semibold' : ' text-white-50'"
+                       th:style="${paginaActiva == 'operador'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
+                       th:href="@{/operador/consola}">
+                        <i class="bi bi-shield-lock me-1" th:classappend="${paginaActiva == 'operador'} ? ' text-info' : ''"></i> Consola Operador
+                    </a>
+                </li>
+                <li class="nav-item" th:if="${rolActual == 'ADMIN'}">
+                    <a class="nav-link px-3 py-2 rounded-3"
+                       th:classappend="${paginaActiva == 'admin'} ? ' active text-white fw-semibold' : ' text-white-50'"
+                       th:style="${paginaActiva == 'admin'} ? 'background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35);' : ''"
+                       th:href="@{/admin/panel}">
+                        <i class="bi bi-speedometer2 me-1" th:classappend="${paginaActiva == 'admin'} ? ' text-warning' : ''"></i> Panel Admin
+                    </a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
+                    <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
+                </span>
+
+                <th:block th:if="${!autenticado}">
+                    <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                    <a th:href="@{/auth/registro}" class="btn btn-sm lr-btn-primary">
+                        <i class="bi bi-person-plus"></i> Registrarme
+                    </a>
+                </th:block>
+
+                <th:block th:if="${autenticado}">
+                    <span class="badge rounded-pill border px-3 py-2 d-none d-md-inline-flex align-items-center me-2"
+                          th:classappend="${rolActual == 'ADMIN' ? ' bg-purple-subtle text-light border-secondary' : (rolActual == 'OPERADOR' ? ' bg-info-subtle text-info border-info-subtle' : ' bg-primary-subtle text-primary border-primary-subtle')}">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span th:text="${nombreUsuario}">Usuario</span>
+                    </span>
+                    <form th:action="@{/auth/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm lr-btn-outline">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                        </button>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

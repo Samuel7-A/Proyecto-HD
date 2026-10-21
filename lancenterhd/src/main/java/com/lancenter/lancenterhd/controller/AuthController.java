@@ -56,20 +56,4 @@ public class AuthController {
         return "auth/login";
     }
 
-    @PostMapping("/login")
-    public String ingresar(@RequestParam String credencial,
-                        @RequestParam String clave,
-                        Model modelo) {
-
-        Usuario usuario = usuarioRepository.findByEmail(credencial)
-                .orElseGet(() -> usuarioRepository.findByCelular(credencial).orElse(null));
-
-        if (usuario != null && usuarioService.claveCorrecta(usuario, clave)) {
-            return "redirect:/";
-        }
-
-        modelo.addAttribute("error", "La credencial o la contrasena no son correctas.");
-        return "auth/login";
-    }
-
 }
