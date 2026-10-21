@@ -19,7 +19,7 @@
 
     <div class="row g-4 justify-content-center">
 
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Soy cliente</h5>
@@ -33,7 +33,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Soy operador</h5>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-3">
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Mi cuenta</h5>
@@ -58,6 +58,20 @@
                         <a th:href="@{/auth/login}" class="btn btn-outline-primary">Iniciar sesion</a>
                         <a th:href="@{/auth/registro}" class="btn btn-outline-secondary">Registrarme</a>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Soy administrador</h5>
+                    <p class="card-text text-muted">
+                        Revisa la ocupacion del local, las reservas y lo cobrado.
+                    </p>
+                    <a th:href="@{/admin/panel}" class="btn btn-outline-dark mt-auto">
+                        Ver panel
+                    </a>
                 </div>
             </div>
         </div>
