@@ -193,8 +193,9 @@ En Windows, usar `.\mvnw.cmd test`.
 - [x] Definición de problemática, objetivos, roles y reglas de negocio
 - [x] Esqueleto Spring Boot + Thymeleaf compilando
 - [x] Modelo de datos (3 entidades: Usuario, Maquina, Reserva) y doble canal (WEB/PRESENCIAL)
-- [ ] Autenticación de clientes (parcial: falta módulo Administrador)
-- [ ] Módulo Operador (parcial: Validar Pago y Marcar No-Show pendientes)
-- [ ] Vistas Thymeleaf de Cliente y Operador (parcial: falta Administrador)
-- [ ] Docker y CI/CD (parcial: falta despliegue)
-- [ ] APF2 — tag `v0.2.0`
+- [x] Autenticación de clientes y Administrador
+- [x] Módulo Operador (validar pago, liberar máquina y marcar no-show)
+- [x] Vistas Thymeleaf de Cliente, Operador y Administrador
+- [ ] Docker y CI/CD (despliegue en Render/Railway)
+- [x] APF2 — tag `v0.2.0` publicado
+
