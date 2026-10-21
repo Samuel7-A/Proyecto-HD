@@ -38,27 +38,35 @@ El presente informe está organizado en las siguientes secciones:
 | Christian Villacorta | Frontend 2 | feature/consola-controller | #16 | 2026-10-18 |
 | Benjamin Mendez | Documentación / QA | feature/docs-flujos | #9 | 2026-10-17 |
 | Benjamin Mendez | Documentación / QA | docs/informe-apf2 | #23 | (abierto) |
+| Keny Evangelista | Backend 1 | feature/reserva-controller | #25 | 2026-10-19 |
+| Keny Evangelista | Backend 1 | fix/consola-reservas-reales | #26 | 2026-10-21 |
+| Sebastián Quiroz | Frontend 1 | feature/redesign-cliente | #27 | 2026-10-20 |
+| Keny Evangelista | Backend 1 | feature/panel-administrador | #28 | 2026-10-21 |
+| Keny Evangelista | Backend 1 | release/v0.2.0 | #30 | 2026-10-21 |
+| Sebastián Quiroz | Frontend 1 | feature/frontend-admin-operador | #29 | 2026-10-21 |
 
 PRs cerrados sin merge: #3 (Sebastián) y #5 (Christian, con cambios solicitados).
+
 ## 4. Estrategia de Git aplicada
 
 ### 4.1 Modelo de ramas
+
 El equipo definió su modelo en `CONTRIBUTING.md`. En la práctica se usó así:
 
 | Rama | Función | Ejemplo real |
 |---|---|---|
-| main | Versión estable; solo recibe releases vía PR | Pendiente: release v0.2.0 |
-| develop | Integración del equipo | Recibió 14 PRs mergeados |
+| main | Versión estable; solo recibe releases y hotfixes vía PR | release v0.2.0 publicado |
+| develop | Integración del equipo | Recibió los PRs mergeados del avance |
 | feature/* | Funcionalidad nueva | feature/maquina (PR #17) |
 | fix/* | Corrección de errores | fix/arranque-datos (PR #13) |
 | chore/* | Infraestructura | chore/ci (PR #14) |
-| release/* | Preparar una versión | Pendiente: release/v0.2.0 |
-| hotfix/* | Arreglo urgente sobre main | hotfix/docs-readme (rama creada, sin PR aún). |
+| release/* | Preparar una versión | release/v0.2.0 (PR #30) |
+| hotfix/* | Arreglo urgente sobre main | hotfix/docs-readme (PR #24) |
 
 ### 4.2 Flujo de trabajo
 Cada integrante trabaja en su rama, abre un Pull Request hacia `develop` y
 necesita la aprobación de al menos un compañero antes del merge.
-- 14 PRs mergeados a `develop` (#1, #2, #4, #6, #7, #8, #9, #12 al #18), todos aprobados.
+- 22 PRs mergeados a `develop` (#1, #2, #4, #6, #7, #8, #9, #12 al #20 y #25 al #30), todos aprobados.
 - 2 PRs cerrados sin merge: #3 y #5. El #5 recibió "Changes requested".
 - Ejemplo de revisión: PR #13, aprobado por Samuel antes del merge.
 - Issues enlazados a PRs: el issue #10 (registro presencial) se resolvió con el PR #12.
@@ -81,14 +89,14 @@ que compila y ejecuta las pruebas con Maven y JDK 21 (Temurin).
 - Se ejecuta en cada push a `main`, `develop`, `feature/*` y `hotfix/*`.
 - Se ejecuta en cada Pull Request hacia `main` o `develop`.
 
-Evidencia (pestaña Actions, 11 ejecuciones: 10 exitosas y 1 fallida):
+Evidencia (pestaña Actions, 38 ejecuciones: 37 exitosas y 1 fallida):
 - La primera ejecución (build #1, PR #14) falló: la prueba `LancenterhdApplicationTests.contextLoads`
   dio el error "Failed to determine a suitable driver class" porque faltaba configurar la base
   de datos para las pruebas. Se corrigió con una base H2 de prueba y un `application.properties`
   de test. Al reabrir el PR, el build #2 pasó.
-- 5 merges consecutivos a `develop` con CI verde: #14, #17, #15, #16 y #18
-  (builds #3, #4, #5, #6 y #9).
-- Con check previo al merge: #14, #18 y #19. Los #15, #16 y #17 se validaron
+- **15 merges a `develop` con CI verde desde el PR #14:** builds #3, #4, #5, #6, #9, #12, #13, #17, #18, #21,
+  #29, #32, #33, #35 y #38. El PR #23 también tuvo checks verdes en cada actualización (builds #14, #15, #16, #23 y #24).
+- Con check previo al merge: todos los PRs desde el #18 en adelante. Los #15, #16 y #17 se validaron
   al llegar a `develop`, porque se abrieron antes de que existiera el pipeline.
 
 - **Resultados de las pruebas:** se adjunta captura del build #9 de GitHub Actions,
@@ -97,7 +105,21 @@ Evidencia (pestaña Actions, 11 ejecuciones: 10 exitosas y 1 fallida):
   ![Build #9: 10 pruebas, 0 fallos, BUILD SUCCESS](imagenes/build-9-pruebas.png)
 
 ### 4.5 Release y hotfix
-[Pendiente: PR del release v0.2.0, tag y hotfix, con enlaces y capturas.]
+
+**Release v0.2.0.** El PR #30 (`release/v0.2.0`, "chore(release): preparar la version 0.2.0 con su changelog")
+subió el `pom.xml` de `0.0.1-SNAPSHOT` a `0.2.0` y agregó el `CHANGELOG.md`. El tag `v0.2.0` marca el
+commit `ef1a8ea`, el merge del PR #30 en `develop`.
+
+- PR del release: #30
+- Release publicado: https://github.com/Samuel7-A/Proyecto-HD/releases/tag/v0.2.0
+
+**Hotfix.** La rama `hotfix/docs-readme` salió de `main` y el PR #24 ("docs: corregir README de main"),
+mergeado el 2026-10-19, corrigió el `README.md` de `main`, que describía mal el stack del proyecto.
+
+- PR del hotfix: #24
+
+**Diferencia entre ambos:** el hotfix corrige algo urgente sobre lo ya entregado (`main`), mientras que
+el release congela una versión nueva para entregar.
 
 ### 4.6 Resolución del conflicto de fusión
 Al traer la rama `hotfix/docs-readme` a `docs/informe-apf2` se produjo un conflicto en
@@ -140,13 +162,23 @@ ejecución) y esta rama actualizó la etapa a APF2 y el estado de Docker y CI/CD
   Commit de merge: `e2b5a87`.
 
   ![Terminal](imagenes/terminal-segunda.png)
+
   ![conflicto 1](imagenes/conflicto1.png)
+
   ![conflicto 2](imagenes/conflicto2.png)
+
   ![conflicto 3](imagenes/conflicto3.png)
-   ![resolucion 1](imagenes/resolucion1.png)
-    ![README resuelto](imagenes/resolucion2.png)
+
+  ![resolucion 1](imagenes/resolucion1.png)
+
+  ![README resuelto](imagenes/resolucion2.png)
+
 ## 5. Exposición y enlace
 
-**Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
+- **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
+- **Versión entregada:** v0.2.0, https://github.com/Samuel7-A/Proyecto-HD/releases/tag/v0.2.0
+- **Integración continua (Actions):** https://github.com/Samuel7-A/Proyecto-HD/actions
+- **PRs mergeados:** https://github.com/Samuel7-A/Proyecto-HD/pulls?q=is%3Apr+is%3Amerged
 
-El APF2 consolidó el trabajo con ramas, Pull Requests revisados e integración continua activa.
+El APF2 consolidó el trabajo con ramas, Pull Requests revisados, integración continua activa,
+dos conflictos de fusión documentados y la publicación del release v0.2.0.
