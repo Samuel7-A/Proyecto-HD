@@ -196,6 +196,6 @@ En Windows, usar `.\mvnw.cmd test`.
 - [x] Autenticación de clientes y Administrador
 - [x] Módulo Operador (validar pago, liberar máquina y marcar no-show)
 - [x] Vistas Thymeleaf de Cliente, Operador y Administrador
-- [ ] Docker y CI/CD (despliegue en Render/Railway)
+- [x] Docker y CI/CD (Docker + Compose operativo; CI activo en cada push; CD pendiente para APF3)
 - [x] APF2 — tag `v0.2.0` publicado
 
