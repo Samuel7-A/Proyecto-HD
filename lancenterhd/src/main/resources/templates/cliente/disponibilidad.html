@@ -1,81 +1,344 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Disponibilidad - LAN Center HD</title>
+    <title>Disponibilidad de Máquinas - LanReserve</title>
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Inter & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- LanReserve Custom Stylesheet -->
+    <link rel="stylesheet" th:href="@{/css/cliente.css}">
+    <style>
+        /* Fallback directo de seguridad */
+        :root {
+            --lr-cyan: #00f2fe;
+            --lr-blue: #4facfe;
+            --lr-bg-body: #070b14;
+        }
+        body.lr-body {
+            background-color: #070b14;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(0, 242, 254, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(7, 11, 20, 0.95) 0%, #070b14 100%);
+            background-attachment: fixed;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .font-gamer { font-family: 'Rajdhani', sans-serif; }
+    </style>
 </head>
-<body class="bg-light">
+<body class="lr-body">
 
-    <div class="container my-5">
-        <h1 class="mb-4 text-center">Consultar Disponibilidad de Máquinas</h1>
+    <!-- Navbar Superior -->
+    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
+        <div class="container">
+            <a class="navbar-brand lr-logo" th:href="@{/}">
+                <i class="bi bi-display lr-logo-icon"></i>
+                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list text-light fs-3"></i>
+            </button>
 
-        <!-- Formulario de filtro de fecha y bloque horario (horaInicio) -->
-        <div class="card mb-4 shadow-sm">
-            <div class="card-body">
-                <form th:action="@{/cliente/disponibilidad}" method="get" class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label for="fecha" class="form-label font-weight-bold">Fecha:</label>
-                        <input type="date" id="fecha" name="fecha" class="form-control" th:value="${fechaSeleccionada}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="horaInicio" class="form-label font-weight-bold">Hora de Inicio (Bloque 1h):</label>
-                        <input type="time" id="horaInicio" name="horaInicio" class="form-control" th:value="${horaInicioSeleccionada}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100">Consultar Disponibilidad</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active text-white fw-semibold px-3 py-2 rounded-3" style="background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);" th:href="@{/cliente/disponibilidad}">
+                            <i class="bi bi-cpu me-1 text-info"></i> Disponibilidad
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/historial}">
+                            <i class="bi bi-clock-history me-1"></i> Mis Reservas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/operador/consola}">
+                            <i class="bi bi-shield-lock me-1"></i> Consola Operador
+                        </a>
+                    </li>
+                </ul>
 
-        <!-- Tabla de máquinas y estado -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <h5 class="card-title mb-0">Estado de Equipos</h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover table-striped mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Código Máquina</th>
-                                <th>Especificaciones / Zona</th>
-                                <th>Estado</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Iteración Thymeleaf sobre la lista de máquinas -->
-                            <tr th:each="maquina : ${maquinas}">
-                                <td th:text="${maquina.codigo}">M-01</td>
-                                <td th:text="${maquina.especificaciones}">PC Gamer High-End - Zona VIP</td>
-                                <td>
-                                    <!-- Evaluación de estado según LanReserve_documento.md -->
-                                    <span th:if="${maquina.estado.name() == 'DISPONIBLE'}" class="badge bg-success">Disponible</span>
-                                    <span th:if="${maquina.estado.name() == 'OCUPADA'}" class="badge bg-danger">Ocupada</span>
-                                    <span th:if="${maquina.estado.name() == 'MANTENIMIENTO'}" class="badge bg-warning text-dark">Mantenimiento</span>
-                                </td>
-                                <td>
-                                    <a th:if="${maquina.estado.name() == 'DISPONIBLE'}" 
-                                       th:href="@{/cliente/reservar(maquinaId=${maquina.id})}" 
-                                       class="btn btn-sm btn-outline-success">Reservar</a>
-                                    <button th:unless="${maquina.estado.name() == 'DISPONIBLE'}" 
-                                            class="btn btn-sm btn-secondary" disabled>No disponible</button>
-                                </td>
-                            </tr>
-                            <tr th:if="${#lists.isEmpty(maquinas)}">
-                                <td colspan="4" class="text-center text-muted py-3">
-                                    Selecciona una fecha y hora de inicio para consultar los equipos disponibles.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
+                        <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
+                    </span>
+                    <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                    </a>
+                    <a th:href="@{/auth/registro}" class="btn btn-sm lr-btn-primary">
+                        <i class="bi bi-person-plus"></i> Registrarme
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
+    </nav>
 
+    <!-- Contenido Principal -->
+    <main class="container my-4 my-md-5">
+
+        <!-- Mensajes Flash de Éxito / Error -->
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10b981 !important; color: #a7f3d0;">
+            <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
+            <div th:text="${mensaje}">Reserva realizada exitosamente.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(244, 63, 94, 0.15); border-left: 4px solid #f43f5e !important; color: #fecdd3;">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
+            <div th:text="${error}">Error en la operación.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Hero & Buscador de Disponibilidad -->
+        <div class="lr-filter-card p-4 p-md-5 mb-5 position-relative overflow-hidden">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <div class="d-inline-flex align-items-center gap-2 mb-2">
+                        <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4);">
+                            <i class="bi bi-joystick me-1"></i> Zona de Equipos
+                        </span>
+                        <span class="text-white-50 small">Tarifa: S/ 5.00 / hora</span>
+                    </div>
+                    <h1 class="lr-title-gradient display-6 mb-2">Consulta y Reserva tu Máquina</h1>
+                    <p class="text-white-50 mb-0">
+                        Selecciona tu fecha y horario para consultar las estaciones de batalla listas para jugar sin esperas ni colas.
+                    </p>
+                </div>
+
+                <div class="col-lg-6">
+                    <!-- Formulario con campos exactos: fecha y horaInicio -->
+                    <form th:action="@{/cliente/disponibilidad}" method="get" class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="fecha" class="form-label text-white-50 small mb-1 fw-semibold">
+                                <i class="bi bi-calendar3 me-1 text-info"></i> Fecha de Reserva
+                            </label>
+                            <div class="input-group lr-input-group">
+                                <input type="date" id="fecha" name="fecha" class="form-control" th:value="${fechaSeleccionada}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="horaInicio" class="form-label text-white-50 small mb-1 fw-semibold">
+                                <i class="bi bi-clock me-1 text-info"></i> Bloque Horario
+                            </label>
+                            <div class="input-group lr-input-group">
+                                <input type="time" id="horaInicio" name="horaInicio" class="form-control" th:value="${horaInicioSeleccionada}" required>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <button type="submit" class="btn lr-btn-primary w-100 py-2">
+                                <i class="bi bi-search"></i> Consultar Disponibilidad
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Encabezado de la Sección de Equipos -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+                <h3 class="font-gamer mb-1 text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-pc-display text-info"></i> Estado del Salón de Equipos
+                </h3>
+                <p class="text-white-50 small mb-0">
+                    Equipos conectados y monitoreados en tiempo real.
+                </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge lr-badge-glow lr-badge-available">
+                    <span class="lr-pulse-dot lr-pulse-available"></span> Disponible
+                </span>
+                <span class="badge lr-badge-glow lr-badge-occupied">
+                    <span class="lr-pulse-dot lr-pulse-occupied"></span> Ocupada
+                </span>
+                <span class="badge lr-badge-glow lr-badge-maintenance">
+                    <span class="lr-pulse-dot lr-pulse-maintenance"></span> Mantenimiento
+                </span>
+            </div>
+        </div>
+
+        <!-- Vista en Cards Modernas / Cyberpunk -->
+        <div class="row g-4 mb-5" th:if="${not #lists.isEmpty(maquinas)}">
+            <div class="col-md-6 col-lg-4" th:each="maquina : ${maquinas}">
+                <div class="lr-card p-4 h-100 d-flex flex-column justify-content-between position-relative">
+                    
+                    <div>
+                        <!-- Código y Badge de Estado -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span class="lr-machine-code">
+                                    <i class="bi bi-terminal text-info fs-5"></i>
+                                    <span th:text="${maquina.codigo}">M-01</span>
+                                </span>
+                                <!-- Tag por Zona según el texto -->
+                                <span th:if="${#strings.contains(maquina.especificaciones, 'VIP')}" class="lr-tag-vip mt-1 d-inline-block">
+                                    <i class="bi bi-gem me-1"></i> ZONA VIP
+                                </span>
+                                <span th:if="${#strings.contains(maquina.especificaciones, 'Streaming')}" class="lr-tag-stream mt-1 d-inline-block">
+                                    <i class="bi bi-broadcast me-1"></i> STREAMING ROOM
+                                </span>
+                            </div>
+
+                            <!-- Evaluación de estado con .name() -->
+                            <div>
+                                <span th:if="${maquina.estado.name() == 'DISPONIBLE'}" class="badge lr-badge-glow lr-badge-available">
+                                    <span class="lr-pulse-dot lr-pulse-available"></span> Disponible
+                                </span>
+                                <span th:if="${maquina.estado.name() == 'OCUPADA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                    <span class="lr-pulse-dot lr-pulse-occupied"></span> Ocupada
+                                </span>
+                                <span th:if="${maquina.estado.name() == 'MANTENIMIENTO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                    <span class="lr-pulse-dot lr-pulse-maintenance"></span> Mantenimiento
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Especificaciones -->
+                        <div class="mb-4">
+                            <p class="text-light fw-medium mb-2 small" th:text="${maquina.especificaciones}">
+                                PC Gamer High-End - Zona VIP
+                            </p>
+
+                            <!-- Chips de Specs -->
+                            <div class="d-flex flex-wrap">
+                                <span class="lr-spec-chip">
+                                    <i class="bi bi-gpu-card"></i> GPU Dedicada
+                                </span>
+                                <span class="lr-spec-chip">
+                                    <i class="bi bi-memory"></i> RAM Gaming
+                                </span>
+                                <span class="lr-spec-chip">
+                                    <i class="bi bi-speedometer2"></i> 240Hz Display
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acción / Botón Reservar -->
+                    <div class="pt-3 border-top border-dark-subtle d-flex justify-content-between align-items-center">
+                        <span class="text-white-50 small">
+                            <i class="bi bi-tag me-1"></i> S/ 5.00/h
+                        </span>
+
+                        <div>
+                            <!-- Botón activo si está disponible -->
+                            <a th:if="${maquina.estado.name() == 'DISPONIBLE'}" 
+                               th:href="@{/cliente/reservar(maquinaId=${maquina.id})}" 
+                               class="lr-btn-reserve">
+                                <i class="bi bi-lightning-charge-fill"></i> Reservar
+                            </a>
+                            <!-- Botón inactivo si está ocupada o mantenimiento -->
+                            <button th:unless="${maquina.estado.name() == 'DISPONIBLE'}" 
+                                    class="lr-btn-disabled" disabled>
+                                <i class="bi bi-lock-fill"></i> No disponible
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Estilizada de Referencia / Lista Completa -->
+        <div class="lr-card-static overflow-hidden mb-5">
+            <div class="p-3 bg-dark bg-opacity-50 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 font-gamer text-white text-uppercase letter-spacing-1">
+                    <i class="bi bi-table me-2 text-info"></i> Lista General de Estaciones
+                </h6>
+                <span class="text-white-50 small" th:text="${#lists.size(maquinas)} + ' estaciones registradas'">6 estaciones</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table lr-table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Estación</th>
+                            <th>Configuración / Zona</th>
+                            <th>Estado Actual</th>
+                            <th class="text-end">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="maquina : ${maquinas}">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-3 bg-secondary bg-opacity-25 p-2 text-info">
+                                        <i class="bi bi-pc"></i>
+                                    </div>
+                                    <span class="fw-bold font-gamer fs-5 text-white" th:text="${maquina.codigo}">M-01</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-light" th:text="${maquina.especificaciones}">PC Gamer High-End - Zona VIP</div>
+                            </td>
+                            <td>
+                                <span th:if="${maquina.estado.name() == 'DISPONIBLE'}" class="badge lr-badge-glow lr-badge-available">
+                                    <span class="lr-pulse-dot lr-pulse-available"></span> Disponible
+                                </span>
+                                <span th:if="${maquina.estado.name() == 'OCUPADA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                    <span class="lr-pulse-dot lr-pulse-occupied"></span> Ocupada
+                                </span>
+                                <span th:if="${maquina.estado.name() == 'MANTENIMIENTO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                    <span class="lr-pulse-dot lr-pulse-maintenance"></span> Mantenimiento
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a th:if="${maquina.estado.name() == 'DISPONIBLE'}" 
+                                   th:href="@{/cliente/reservar(maquinaId=${maquina.id})}" 
+                                   class="lr-btn-reserve">
+                                    <i class="bi bi-lightning-charge-fill"></i> Reservar
+                                </a>
+                                <button th:unless="${maquina.estado.name() == 'DISPONIBLE'}" 
+                                        class="lr-btn-disabled" disabled>
+                                    <i class="bi bi-lock-fill"></i> No disponible
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Fila cuando la lista está vacía -->
+                        <tr th:if="${#lists.isEmpty(maquinas)}">
+                            <td colspan="4" class="text-center text-white-50 py-5">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                                No se encontraron máquinas para los criterios seleccionados.<br>
+                                <small>Por favor selecciona otra fecha u horario en el buscador superior.</small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="lr-footer mt-auto text-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-md-start mb-2 mb-md-0">
+                    <span class="font-gamer fs-6 text-white">LanReserve</span> &copy; 2026 &mdash; Plataforma de Gestión de Centros de Cómputo
+                </div>
+                <div class="col-md-6 text-md-end text-white-50">
+                    <i class="bi bi-lightning-charge text-warning"></i> Alta disponibilidad &bull; Conectividad de fibra óptica
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

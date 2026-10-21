@@ -18,7 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Flujo de reserva del cliente.
@@ -59,7 +62,7 @@ public class ReservaController {
         return "cliente/reservar";
     }
 
-    /** Crea la reserva y vuelve a la disponibilidad. */
+    /** Crea la reserva y vuelve a la disponibilidad con mensaje. */
     @PostMapping("/cliente/reservar")
     public String registrarReserva(@RequestParam Long maquinaId,
                                    @RequestParam String celular,
@@ -88,7 +91,37 @@ public class ReservaController {
         reservaRepository.save(reserva);
 
         redireccion.addFlashAttribute("mensaje",
-                "Reserva registrada. Pasa al local para validar el pago.");
-        return "redirect:/cliente/disponibilidad";
+                "Reserva registrada exitosamente. Pasa al local para validar el pago.");
+        return "redirect:/cliente/historial?celular=" + celular;
+    }
+
+    /** Historial de reservas del cliente (permite filtrar por celular). */
+    @GetMapping("/cliente/historial")
+    public String verHistorial(@RequestParam(required = false) String celular, Model modelo) {
+        List<Reserva> reservas;
+        if (celular != null && !celular.isBlank()) {
+            Optional<Usuario> usuario = usuarioRepository.findByCelular(celular);
+            if (usuario.isPresent()) {
+                reservas = reservaRepository.findAll().stream()
+                        .filter(r -> r.getUsuarioId() != null && r.getUsuarioId().equals(usuario.get().getId()))
+                        .toList();
+                modelo.addAttribute("usuario", usuario.get());
+            } else {
+                reservas = List.of();
+                modelo.addAttribute("error", "No se encontró ningún usuario registrado con el celular: " + celular);
+            }
+        } else {
+            reservas = reservaRepository.findAll();
+        }
+
+        modelo.addAttribute("reservas", reservas);
+        modelo.addAttribute("celularBuscado", celular);
+
+        // Mapa de maquinaId a codigo (M-01, M-02, etc.) para facil visualizacion
+        Map<Long, String> maquinasMap = maquinaRepository.findAll().stream()
+                .collect(Collectors.toMap(Maquina::getId, Maquina::getCodigo, (a, b) -> a));
+        modelo.addAttribute("maquinasMap", maquinasMap);
+
+        return "cliente/historial";
     }
 }
