@@ -26,6 +26,9 @@ El presente informe está organizado en las siguientes secciones:
 | Samuel Torres | BD / DevOps | feature/bd-docker | #4 | 2026-09-14 |
 | Samuel Torres | BD / DevOps | feature/registro-presencial | #12 | 2026-10-17 |
 | Samuel Torres | BD / DevOps | chore/ci | #14 | 2026-10-18 |
+| Samuel Torres | BD / DevOps | feature/reserva-repository | #19 | 2026-10-19 |
+| Samuel Torres | BD / DevOps | docs/readme-develop | #20 | 2026-10-19 |
+| Samuel Torres | BD / DevOps | hotfix/docs-readme | #24 | 2026-10-19 |
 | Keny Evangelista | Backend 1 | feature/auth | #1 | 2026-09-02 |
 | Keny Evangelista | Backend 1 | feature/auth-completo | #7 | 2026-09-17 |
 | Keny Evangelista | Backend 1 | fix/arranque-datos | #13 | 2026-10-18 |
@@ -44,9 +47,7 @@ El presente informe está organizado en las siguientes secciones:
 | Keny Evangelista | Backend 1 | feature/panel-administrador | #28 | 2026-10-21 |
 | Keny Evangelista | Backend 1 | release/v0.2.0 | #30 | 2026-10-21 |
 | Sebastián Quiroz | Frontend 1 | feature/frontend-admin-operador | #29 | 2026-10-21 |
-| Samuel Torres | BD / DevOps | feature/reserva-repository | #19 | 2026-10-19 |
-| Samuel Torres | BD / DevOps | docs/readme-develop | #20 | 2026-10-19 |
-| Samuel Torres | BD / DevOps | hotfix/docs-readme | #24 | 2026-10-19 |
+
 PRs cerrados sin merge: #3 (Sebastián) y #5 (Christian, con cambios solicitados).
 
 ## 4. Estrategia de Git aplicada
@@ -57,7 +58,7 @@ El equipo definió su modelo en `CONTRIBUTING.md`. En la práctica se usó así:
 
 | Rama | Función | Ejemplo real |
 |---|---|---|
-| main | Versión estable; solo recibe releases y hotfixes vía PR | release v0.2.0 publicado |
+| main | Versión estable; solo recibe releases y hotfixes vía PR | hotfix/docs-readme (PR #24) |
 | develop | Integración del equipo | Recibió los PRs mergeados del avance |
 | feature/* | Funcionalidad nueva | feature/maquina (PR #17) |
 | fix/* | Corrección de errores | fix/arranque-datos (PR #13) |
@@ -68,7 +69,7 @@ El equipo definió su modelo en `CONTRIBUTING.md`. En la práctica se usó así:
 ### 4.2 Flujo de trabajo
 Cada integrante trabaja en su rama, abre un Pull Request hacia `develop` y
 necesita la aprobación de al menos un compañero antes del merge.
-- **23 PRs mergeados a `develop`** (#1, #2, #4, #6, #7, #8, #9, #12 al #20, #24 y #25 al #30), todos aprobados.
+- **23 PRs mergeados** (22 a `develop`: #1, #2, #4, #6, #7, #8, #9, #12 al #20 y #25 al #30; y el hotfix #24 a `main`), todos aprobados.
 - 2 PRs cerrados sin merge: #3 y #5. El #5 recibió "Changes requested".
 - Ejemplo de revisión: PR #13, aprobado por Samuel antes del merge.
 - Issues enlazados a PRs: el issue #10 (registro presencial) se resolvió con el PR #12.
@@ -97,7 +98,7 @@ Evidencia (pestaña Actions, 41 ejecuciones: 40 exitosas y 1 fallida):
   de datos para las pruebas. Se corrigió con una base H2 de prueba y un `application.properties`
   de test. Al reabrir el PR, el build #2 pasó.
 - 13 merges a develop con CI verde desde el PR #14. Los 13 push a develop ejecutaron el pipeline y finalizaron correctamente.
-El PR #23 también tuvo checks verdes en cada actualización (builds #14, #15, #16, #23 y #24).
+- El PR #23 también tuvo checks verdes en cada actualización (builds #14, #15, #16, #23 y #24).
 - Con check previo al merge: todos los PRs desde el #18 en adelante. Los #15, #16 y #17 se validaron
   al llegar a `develop`, porque se abrieron antes de que existiera el pipeline.
 
