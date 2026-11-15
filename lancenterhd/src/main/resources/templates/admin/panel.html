@@ -446,14 +446,6 @@
                                 </span>
                             </td>
                         </tr>
-                                <span th:if="${reserva.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
-                                    <i class="bi bi-exclamation-triangle me-1"></i> Vencida
-                                </span>
-                                <span th:if="${reserva.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
-                                    <i class="bi bi-x-circle me-1"></i> Cancelada
-                                </span>
-                            </td>
-                        </tr>
 
                         <!-- Fila cuando la lista está vacía -->
                         <tr th:if="${#lists.isEmpty(reservas)}" id="filaSinReservas">

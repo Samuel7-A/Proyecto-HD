@@ -517,24 +517,34 @@ body.lr-body {
 }
 
 /* Tarjetas y botones con acentos especiales */
-.lr-card-amber {
+.lr-card-amber,
+.lr-card.lr-card-amber {
     border-color: rgba(245, 158, 11, 0.35) !important;
 }
 
-.lr-card-purple {
+.lr-card-purple,
+.lr-card.lr-card-purple {
     border-color: rgba(139, 92, 246, 0.35) !important;
 }
 
-.lr-btn-purple {
-    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-    color: #ffffff;
-    border: none;
-    padding: 0.65rem;
+.lr-btn-purple,
+.btn.lr-btn-purple,
+a.lr-btn-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%) !important;
+    background-color: #8b5cf6 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 0.65rem !important;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.35);
 }
 
-.lr-btn-purple:hover {
-    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
-    color: #ffffff;
+.lr-btn-purple:hover,
+.btn.lr-btn-purple:hover,
+a.lr-btn-purple:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%) !important;
+    background-color: #7c3aed !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.55);
 }
 
 /* Barras de progreso de ocupación */
@@ -543,15 +553,21 @@ body.lr-body {
     background: rgba(255, 255, 255, 0.06);
 }
 
+.progress-bar.lr-progress-bar-available,
 .lr-progress-bar-available {
-    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%) !important;
+    background-color: #10b981 !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5) !important;
 }
 
+.progress-bar.lr-progress-bar-occupied,
 .lr-progress-bar-occupied {
-    background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
+    background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%) !important;
+    background-color: #f43f5e !important;
 }
 
+.progress-bar.lr-progress-bar-maintenance,
 .lr-progress-bar-maintenance {
-    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%) !important;
+    background-color: #f59e0b !important;
 }
