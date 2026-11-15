@@ -399,3 +399,159 @@ body.lr-body {
     font-size: 0.85rem;
     color: var(--lr-text-muted);
 }
+
+/* ==========================================================================
+   Refactorización APF3: Clases de estilo comunes consolidadas
+   ========================================================================== */
+
+/* Alertas temáticas */
+.lr-alert-success {
+    background: rgba(16, 185, 129, 0.15) !important;
+    border-left: 4px solid var(--lr-success) !important;
+    color: #a7f3d0 !important;
+}
+
+.lr-alert-danger {
+    background: rgba(244, 63, 94, 0.15) !important;
+    border-left: 4px solid var(--lr-danger) !important;
+    color: #fecdd3 !important;
+}
+
+/* Badges de sección temáticos */
+.lr-section-badge-indigo {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.lr-section-badge-cyan {
+    background: rgba(0, 242, 254, 0.15);
+    color: var(--lr-cyan);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+}
+
+.lr-section-badge-green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.lr-section-badge-purple {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+/* Cajas y contenedores decorativos */
+.lr-dark-box {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--lr-border-subtle);
+}
+
+.lr-dark-box-subtle {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--lr-border-subtle);
+}
+
+.lr-highlight-box {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(0, 242, 254, 0.1) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.lr-hero-lead {
+    max-width: 650px;
+}
+
+.lr-select-auto {
+    width: auto;
+}
+
+.lr-form-container-sm {
+    max-width: 460px;
+}
+
+.lr-form-container-md {
+    max-width: 520px;
+}
+
+/* Badges ID de tabla y estado completado */
+.lr-table-id-badge {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lr-badge-completed {
+    background: rgba(99, 102, 241, 0.2);
+    color: #c7d2fe;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+/* Iconos y badges por acento */
+.lr-icon-box-cyan {
+    background: rgba(0, 242, 254, 0.15);
+    color: var(--lr-cyan);
+}
+
+.lr-icon-box-green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.lr-icon-box-indigo {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+}
+
+.lr-icon-box-amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.lr-icon-box-purple {
+    background: rgba(139, 92, 246, 0.15);
+    color: #c4b5fd;
+}
+
+.lr-badge-purple-subtle {
+    background: rgba(139, 92, 246, 0.2);
+}
+
+/* Tarjetas y botones con acentos especiales */
+.lr-card-amber {
+    border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+.lr-card-purple {
+    border-color: rgba(139, 92, 246, 0.35) !important;
+}
+
+.lr-btn-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #ffffff;
+    border: none;
+    padding: 0.65rem;
+}
+
+.lr-btn-purple:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+    color: #ffffff;
+}
+
+/* Barras de progreso de ocupación */
+.lr-progress-container {
+    height: 12px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.lr-progress-bar-available {
+    background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.lr-progress-bar-occupied {
+    background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
+}
+
+.lr-progress-bar-maintenance {
+    background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+}
