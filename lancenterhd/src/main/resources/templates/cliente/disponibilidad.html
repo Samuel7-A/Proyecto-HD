@@ -91,13 +91,13 @@
     <main class="container my-4 my-md-5">
 
         <!-- Mensajes Flash de Éxito / Error -->
-        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(16, 185, 129, 0.15); border-left: 4px solid #10b981 !important; color: #a7f3d0;">
+        <div th:if="${mensaje}" class="alert lr-alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
             <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
             <div th:text="${mensaje}">Reserva realizada exitosamente.</div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert" style="background: rgba(244, 63, 94, 0.15); border-left: 4px solid #f43f5e !important; color: #fecdd3;">
+        <div th:if="${error}" class="alert lr-alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
             <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
             <div th:text="${error}">Error en la operación.</div>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -108,7 +108,7 @@
             <div class="row align-items-center g-4">
                 <div class="col-lg-6">
                     <div class="d-inline-flex align-items-center gap-2 mb-2">
-                        <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.4);">
+                        <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer lr-section-badge-indigo">
                             <i class="bi bi-joystick me-1"></i> Zona de Equipos
                         </span>
                         <span class="text-white-50 small">Tarifa: S/ 5.00 / hora</span>
