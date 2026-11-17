@@ -39,7 +39,7 @@
         <!-- Header / Título del Panel -->
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
             <div>
-                <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4);">
+                <span class="badge rounded-pill text-uppercase px-3 py-1 font-gamer mb-2 lr-section-badge-purple">
                     <i class="bi bi-graph-up-arrow me-1"></i> Métricas Operativas
                 </span>
                 <h1 class="lr-title-gradient display-6 mb-1">Panel de Control & Ocupación</h1>
@@ -62,7 +62,7 @@
                 <div class="lr-card p-4 h-100 position-relative overflow-hidden">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="text-white-50 font-gamer text-uppercase small">Estaciones</span>
-                        <div class="rounded-3 p-2" style="background: rgba(0, 242, 254, 0.15); color: #00f2fe;">
+                        <div class="rounded-3 p-2 lr-icon-box-cyan">
                             <i class="bi bi-pc-display fs-5"></i>
                         </div>
                     </div>
@@ -81,13 +81,13 @@
                 <div class="lr-card p-4 h-100 position-relative overflow-hidden">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="text-white-50 font-gamer text-uppercase small">Reservas</span>
-                        <div class="rounded-3 p-2" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+                        <div class="rounded-3 p-2 lr-icon-box-indigo">
                             <i class="bi bi-calendar2-check fs-5"></i>
                         </div>
                     </div>
                     <div class="font-gamer display-5 fw-bold text-white mb-1" th:text="${totalReservas}">0</div>
                     <div class="d-flex align-items-center gap-2 small">
-                        <span class="badge px-2 py-1" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                        <span class="badge px-2 py-1 lr-badge-completed">
                             <i class="bi bi-lightning-fill text-warning me-1"></i> <span th:text="${reservasHoy}">0</span> para hoy
                         </span>
                     </div>
@@ -99,7 +99,7 @@
                 <div class="lr-card p-4 h-100 position-relative overflow-hidden">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="text-white-50 font-gamer text-uppercase small">Clientes Registrados</span>
-                        <div class="rounded-3 p-2" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                        <div class="rounded-3 p-2 lr-icon-box-green">
                             <i class="bi bi-people fs-5"></i>
                         </div>
                     </div>
@@ -114,10 +114,10 @@
 
             <!-- Recaudación Efectiva -->
             <div class="col-sm-6 col-lg-3">
-                <div class="lr-card p-4 h-100 position-relative overflow-hidden" style="border-color: rgba(245, 158, 11, 0.35);">
+                <div class="lr-card p-4 h-100 position-relative overflow-hidden lr-card-amber">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <span class="text-white-50 font-gamer text-uppercase small">Recaudación Cobrada</span>
-                        <div class="rounded-3 p-2" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                        <div class="rounded-3 p-2 lr-icon-box-amber">
                             <i class="bi bi-cash-coin fs-5"></i>
                         </div>
                     </div>
@@ -163,10 +163,9 @@
                                       th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasDisponibles * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
                             </div>
                         </div>
-                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
-                            <div class="progress-bar rounded-pill" role="progressbar"
-                                 style="background: linear-gradient(90deg, #10b981 0%, #34d399 100%); box-shadow: 0 0 10px rgba(16,185,129,0.5);"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasDisponibles * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #10b981 0%, #34d399 100%); box-shadow: 0 0 10px rgba(16,185,129,0.5);'">
+                        <div class="progress rounded-pill lr-progress-container">
+                            <div class="progress-bar rounded-pill lr-progress-bar-available" role="progressbar"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasDisponibles * 100 / totalMaquinas) : 0} + '%;'">
                             </div>
                         </div>
                     </div>
@@ -184,10 +183,9 @@
                                       th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasOcupadas * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
                             </div>
                         </div>
-                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
-                            <div class="progress-bar rounded-pill" role="progressbar"
-                                 style="background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasOcupadas * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);'">
+                        <div class="progress rounded-pill lr-progress-container">
+                            <div class="progress-bar rounded-pill lr-progress-bar-occupied" role="progressbar"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasOcupadas * 100 / totalMaquinas) : 0} + '%;'">
                             </div>
                         </div>
                     </div>
@@ -205,10 +203,9 @@
                                       th:text="'(' + ${#numbers.formatDecimal(totalMaquinas > 0 ? (maquinasMantenimiento * 100.0 / totalMaquinas) : 0, 1, 1)} + '%)'">(0%)</span>
                             </div>
                         </div>
-                        <div class="progress rounded-pill" style="height: 12px; background: rgba(255,255,255,0.06);">
-                            <div class="progress-bar rounded-pill" role="progressbar"
-                                 style="background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);"
-                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasMantenimiento * 100 / totalMaquinas) : 0} + '%; background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);'">
+                        <div class="progress rounded-pill lr-progress-container">
+                            <div class="progress-bar rounded-pill lr-progress-bar-maintenance" role="progressbar"
+                                 th:style="'width: ' + ${totalMaquinas > 0 ? (maquinasMantenimiento * 100 / totalMaquinas) : 0} + '%;'">
                             </div>
                         </div>
                     </div>
@@ -255,7 +252,7 @@
 
                         <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0 py-3 border-secondary border-opacity-25">
                             <div class="d-flex align-items-center gap-2">
-                                <span class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                <span class="badge lr-badge-completed">
                                     <i class="bi bi-check2-all me-1"></i> Completada
                                 </span>
                                 <small class="text-white-50 d-none d-sm-inline">Sesiones finalizadas</small>
@@ -310,7 +307,7 @@
                                 <input type="text" id="filtroReservas" class="form-control" 
                                        placeholder="Buscar por cliente, máquina o estado...">
                             </div>
-                            <select id="filtroEstado" class="form-select bg-dark text-light border-secondary border-opacity-50" style="width: auto;">
+                            <select id="filtroEstado" class="form-select bg-dark text-light border-secondary border-opacity-50 lr-select-auto">
                                 <option value="">Todos los estados</option>
                                 <option value="PENDIENTE_PAGO">Pendiente de pago</option>
                                 <option value="PAGADO">Pagado</option>
@@ -341,7 +338,7 @@
                     <tbody>
                         <tr th:each="reserva : ${reservas}" th:attr="data-estado=${reserva.estado}">
                             <td>
-                                <span class="badge font-gamer text-white-50" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);" th:text="'#' + ${reserva.id}">
+                                <span class="badge font-gamer text-white-50 lr-table-id-badge" th:text="'#' + ${reserva.id}">
                                     #1
                                 </span>
                             </td>
@@ -388,7 +385,7 @@
                                 <span th:if="${reserva.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
                                     <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
                                 </span>
-                                <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge" style="background: rgba(99, 102, 241, 0.2); color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.4);">
+                                <span th:if="${reserva.estado.name() == 'COMPLETADA'}" class="badge lr-badge-completed">
                                     <i class="bi bi-check2-all me-1"></i> Completada
                                 </span>
                                 <span th:if="${reserva.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
