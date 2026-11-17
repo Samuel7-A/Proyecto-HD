@@ -31,55 +31,7 @@
 <body class="lr-body">
 
     <!-- Navbar Superior -->
-    <nav class="navbar navbar-expand-lg lr-navbar sticky-top">
-        <div class="container">
-            <a class="navbar-brand lr-logo" th:href="@{/}">
-                <i class="bi bi-display lr-logo-icon"></i>
-                <span>LAN<span style="color:#00f2fe;">RESERVE</span></span>
-            </a>
-            
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="bi bi-list text-light fs-3"></i>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/}">
-                            <i class="bi bi-house-door me-1"></i> Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/cliente/disponibilidad}">
-                            <i class="bi bi-cpu me-1"></i> Disponibilidad
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-white fw-semibold px-3 py-2 rounded-3" style="background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);" th:href="@{/cliente/historial}">
-                            <i class="bi bi-clock-history me-1 text-info"></i> Mis Reservas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white-50 px-3 py-2 rounded-3" th:href="@{/operador/consola}">
-                            <i class="bi bi-shield-lock me-1"></i> Consola Operador
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-3 py-2 d-none d-md-inline-flex align-items-center me-2">
-                        <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
-                    </span>
-                    <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
-                        <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
-                    </a>
-                    <a th:href="@{/auth/registro}" class="btn btn-sm lr-btn-primary">
-                        <i class="bi bi-person-plus"></i> Registrarme
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <div th:replace="~{fragments/navbar :: navbar('historial')}"></div>
 
     <!-- Contenido Principal -->
     <main class="container my-4 my-md-5">
@@ -110,27 +62,15 @@
                     </p>
                 </div>
 
-                <div class="col-lg-6">
-                    <!-- Formulario de filtro por celular -->
-                    <form th:action="@{/cliente/historial}" method="get" class="row g-2 align-items-end">
-                        <div class="col-sm-8">
-                            <label for="celular" class="form-label text-white-50 small mb-1 fw-semibold">
-                                <i class="bi bi-phone me-1 text-info"></i> Consultar por Celular:
-                            </label>
-                            <div class="input-group lr-input-group">
-                                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                <input type="tel" id="celular" name="celular" class="form-control" 
-                                       placeholder="Ingresa tu celular (ej: 987654321)" 
-                                       th:value="${celularBuscado}">
-                            </div>
+                <div class="col-lg-6 text-lg-end">
+                    <div class="d-inline-flex align-items-center gap-2 p-3 rounded-3"
+                         style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);">
+                        <i class="bi bi-person-circle text-info fs-4"></i>
+                        <div class="text-start">
+                            <span class="text-white-50 small d-block">Sesión de cliente</span>
+                            <span class="text-white fw-semibold" th:text="${nombreUsuario}">Usuario</span>
                         </div>
-
-                        <div class="col-sm-4">
-                            <button type="submit" class="btn lr-btn-primary w-100 py-2">
-                                <i class="bi bi-funnel"></i> Filtrar
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -152,9 +92,6 @@
             <div class="d-flex align-items-center gap-2">
                 <a th:href="@{/cliente/disponibilidad}" class="btn lr-btn-reserve">
                     <i class="bi bi-plus-lg"></i> Nueva Reserva
-                </a>
-                <a th:if="${celularBuscado != null and !celularBuscado.isEmpty()}" th:href="@{/cliente/historial}" class="btn lr-btn-outline btn-sm">
-                    <i class="bi bi-x-circle"></i> Ver Todas
                 </a>
             </div>
         </div>

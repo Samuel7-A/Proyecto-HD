@@ -15,7 +15,13 @@
         Tu cuenta fue creada. Ahora puedes iniciar sesion.
     </div>
 
-    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert alert-info" th:if="${param.logout}">
+        Has cerrado sesion correctamente.
+    </div>
+
+    <div class="alert alert-danger" th:if="${param.error}">
+        Credenciales incorrectas. Intenta de nuevo.
+    </div>
 
     <div class="card shadow-sm">
         <div class="card-body">
