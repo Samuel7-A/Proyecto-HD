@@ -1,8 +1,10 @@
+
 package com.lancenter.lancenterhd.controller;
 
 import com.lancenter.lancenterhd.model.Usuario;
-import com.lancenter.lancenterhd.repository.UsuarioRepository;
-import com.lancenter.lancenterhd.service.UsuarioService;
+import com.lancenter.lancenterhd.security.SesionUsuario;
+import com.lancenter.lancenterhd.service.OperadorService;
+import com.lancenter.lancenterhd.service.OperadorService.ResultadoCambioEstado;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,51 +13,79 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/operador")
 public class OperadorController {
 
-    private final UsuarioService usuarioService;
-    private final UsuarioRepository usuarioRepository;
+    private final OperadorService operadorService;
+    private final SesionUsuario sesionUsuario;
 
-    public OperadorController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
-        this.usuarioService = usuarioService;
-        this.usuarioRepository = usuarioRepository;
+    public OperadorController(OperadorService operadorService,
+                              SesionUsuario sesionUsuario) {
+        this.operadorService = operadorService;
+        this.sesionUsuario = sesionUsuario;
     }
 
     @GetMapping("/consola")
-    public String mostrarConsola(@RequestParam(required = false) Long operadorId, Model modelo) {
-        modelo.addAttribute("reservas", List.of());
-        modelo.addAttribute("operadorId", operadorId);
+    public String mostrarConsola(Model modelo) {
+        modelo.addAttribute("reservas", operadorService.obtenerReservas());
+        modelo.addAttribute("nombresClientes", operadorService.obtenerNombresClientes());
+        modelo.addAttribute("codigosMaquinas", operadorService.obtenerCodigosMaquinas());
         return "operador/consola";
     }
 
     @PostMapping("/consola/registrar")
     public String registrarPresencial(@RequestParam String nombre,
-                                      @RequestParam String celular,
-                                      @RequestParam(required = false) Long operadorId) {
-        Usuario usuario = usuarioService.registrarPresencial(nombre, celular, operadorId);
-        usuarioRepository.save(usuario);
-        return operadorId == null
-                ? "redirect:/operador/consola"
-                : "redirect:/operador/consola?operadorId=" + operadorId;
+                                      @RequestParam String celular) {
+        Long operadorId = sesionUsuario.usuarioActual()
+                .map(Usuario::getId)
+                .orElse(null);
+
+        operadorService.registrarPresencial(nombre, celular, operadorId);
+        return "redirect:/operador/consola";
     }
 
     @PostMapping("/consola/validar-pago")
-    public String validarPago(@RequestParam Long reservaId, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute(
-                "error", "No se pudo validar el pago: todavía no hay un repositorio de reservas."
-        );
+    public String validarPago(@RequestParam Long reservaId,
+                              RedirectAttributes redirectAttributes) {
+        ResultadoCambioEstado resultado = operadorService.validarPago(reservaId);
+
+        if (resultado == ResultadoCambioEstado.ACTUALIZADO) {
+            redirectAttributes.addFlashAttribute(
+                    "mensaje", "Pago validado: la reserva quedo como PAGADO."
+            );
+        } else if (resultado == ResultadoCambioEstado.NO_ENCONTRADA) {
+            redirectAttributes.addFlashAttribute(
+                    "error", "No existe la reserva indicada."
+            );
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "error", "Solo se puede validar el pago de una reserva pendiente de pago."
+            );
+        }
+
         return "redirect:/operador/consola";
     }
 
     @PostMapping("/consola/no-show")
-    public String marcarNoShow(@RequestParam Long reservaId, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute(
-                "error", "No se pudo marcar la reserva como no-show: todavía no hay un repositorio de reservas."
-        );
+    public String marcarNoShow(@RequestParam Long reservaId,
+                               RedirectAttributes redirectAttributes) {
+        ResultadoCambioEstado resultado = operadorService.marcarNoShow(reservaId);
+
+        if (resultado == ResultadoCambioEstado.ACTUALIZADO) {
+            redirectAttributes.addFlashAttribute(
+                    "mensaje", "Reserva marcada como VENCIDA por inasistencia."
+            );
+        } else if (resultado == ResultadoCambioEstado.NO_ENCONTRADA) {
+            redirectAttributes.addFlashAttribute(
+                    "error", "No existe la reserva indicada."
+            );
+        } else {
+            redirectAttributes.addFlashAttribute(
+                    "error", "Solo se puede marcar inasistencia de una reserva pendiente de pago."
+            );
+        }
+
         return "redirect:/operador/consola";
     }
 }

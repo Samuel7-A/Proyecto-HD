@@ -1,44 +1,119 @@
+
 package com.lancenter.lancenterhd.controller;
 
+import com.lancenter.lancenterhd.model.Reserva;
 import com.lancenter.lancenterhd.model.Usuario;
-import com.lancenter.lancenterhd.repository.UsuarioRepository;
-import com.lancenter.lancenterhd.service.UsuarioService;
+import com.lancenter.lancenterhd.security.SesionUsuario;
+import com.lancenter.lancenterhd.service.OperadorService;
+import com.lancenter.lancenterhd.service.OperadorService.ResultadoCambioEstado;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class OperadorControllerTest {
 
-    private final UsuarioService usuarioService = mock(UsuarioService.class);
-    private final UsuarioRepository usuarioRepository = mock(UsuarioRepository.class);
-    private final OperadorController controller = new OperadorController(usuarioService, usuarioRepository);
+    private final OperadorService operadorService = mock(OperadorService.class);
+    private final SesionUsuario sesionUsuario = mock(SesionUsuario.class);
+
+    private final OperadorController controller =
+            new OperadorController(operadorService, sesionUsuario);
 
     @Test
-    void mostrarConsolaAgregaUnaListaVaciaCuandoNoHayRepositorioDeReservas() {
+    void mostrarConsolaPasaLasReservasYTraduceLosIdentificadores() {
         Model modelo = mock(Model.class);
 
-        assertEquals("operador/consola", controller.mostrarConsola(12L, modelo));
-        verify(modelo).addAttribute("reservas", List.of());
-        verify(modelo).addAttribute("operadorId", 12L);
+        List<Reserva> reservas = List.of(new Reserva());
+
+        when(operadorService.obtenerReservas()).thenReturn(reservas);
+        when(operadorService.obtenerNombresClientes()).thenReturn(Map.of());
+        when(operadorService.obtenerCodigosMaquinas()).thenReturn(Map.of());
+
+        assertEquals("operador/consola", controller.mostrarConsola(modelo));
+
+        verify(modelo).addAttribute("reservas", reservas);
+        verify(modelo).addAttribute(eq("nombresClientes"), eq(Map.of()));
+        verify(modelo).addAttribute(eq("codigosMaquinas"), eq(Map.of()));
     }
 
     @Test
-    void registrarPresencialConstruyeElUsuarioConElServicioYDespuesLoGuarda() {
-        Usuario usuario = new Usuario();
-        when(usuarioService.registrarPresencial("Ana", "987654321", 12L)).thenReturn(usuario);
+    void validarPagoPasaUnaReservaPendienteAPagado() {
+        RedirectAttributes atributos = mock(RedirectAttributes.class);
 
-        assertEquals("redirect:/operador/consola?operadorId=12",
-                controller.registrarPresencial("Ana", "987654321", 12L));
+        when(operadorService.validarPago(1L))
+                .thenReturn(ResultadoCambioEstado.ACTUALIZADO);
 
-        var orden = inOrder(usuarioService, usuarioRepository);
-        orden.verify(usuarioService).registrarPresencial("Ana", "987654321", 12L);
-        orden.verify(usuarioRepository).save(usuario);
+        assertEquals(
+                "redirect:/operador/consola",
+                controller.validarPago(1L, atributos)
+        );
+
+        verify(operadorService).validarPago(1L);
+        verify(atributos).addFlashAttribute(
+                "mensaje",
+                "Pago validado: la reserva quedo como PAGADO."
+        );
+    }
+
+    @Test
+    void noShowMarcaComoVencidaUnaReservaPendiente() {
+        RedirectAttributes atributos = mock(RedirectAttributes.class);
+
+        when(operadorService.marcarNoShow(2L))
+                .thenReturn(ResultadoCambioEstado.ACTUALIZADO);
+
+        assertEquals(
+                "redirect:/operador/consola",
+                controller.marcarNoShow(2L, atributos)
+        );
+
+        verify(operadorService).marcarNoShow(2L);
+        verify(atributos).addFlashAttribute(
+                "mensaje",
+                "Reserva marcada como VENCIDA por inasistencia."
+        );
+    }
+
+    @Test
+    void noSePuedeValidarElPagoDeUnaReservaYaPagada() {
+        RedirectAttributes atributos = mock(RedirectAttributes.class);
+
+        when(operadorService.validarPago(3L))
+                .thenReturn(ResultadoCambioEstado.ESTADO_NO_PERMITIDO);
+
+        assertEquals(
+                "redirect:/operador/consola",
+                controller.validarPago(3L, atributos)
+        );
+
+        verify(operadorService).validarPago(3L);
+        verify(atributos).addFlashAttribute(
+                "error",
+                "Solo se puede validar el pago de una reserva pendiente de pago."
+        );
+    }
+
+    @Test
+    void registrarPresencialUsaElOperadorDeLaSesion() {
+        Usuario operador = new Usuario();
+        operador.setId(12L);
+
+        when(sesionUsuario.usuarioActual()).thenReturn(Optional.of(operador));
+
+        assertEquals(
+                "redirect:/operador/consola",
+                controller.registrarPresencial("Ana", "987654321")
+        );
+
+        verify(operadorService).registrarPresencial(
+                "Ana", "987654321", 12L
+        );
     }
 }

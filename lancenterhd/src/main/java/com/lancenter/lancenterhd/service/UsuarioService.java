@@ -2,7 +2,6 @@ package com.lancenter.lancenterhd.service;
 
 import com.lancenter.lancenterhd.enums.Rol;
 import com.lancenter.lancenterhd.model.Usuario;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
 
-    private final PasswordEncoder codificador = new BCryptPasswordEncoder();
+    private final PasswordEncoder codificador;
+
+    public UsuarioService(PasswordEncoder codificador) {
+        this.codificador = codificador;
+    }
 
     /**
      * Registra un cliente que llega desde la web.

@@ -7,7 +7,7 @@ import com.lancenter.lancenterhd.model.Reserva;
 import com.lancenter.lancenterhd.model.Usuario;
 import com.lancenter.lancenterhd.repository.MaquinaRepository;
 import com.lancenter.lancenterhd.repository.ReservaRepository;
-import com.lancenter.lancenterhd.repository.UsuarioRepository;
+import com.lancenter.lancenterhd.security.SesionUsuario;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Flujo de reserva del cliente.
@@ -34,15 +37,15 @@ public class ReservaController {
     private static final BigDecimal COSTO_POR_HORA = new BigDecimal("5.00");
 
     private final ReservaRepository reservaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final MaquinaRepository maquinaRepository;
+    private final SesionUsuario sesionUsuario;
 
     public ReservaController(ReservaRepository reservaRepository,
-                             UsuarioRepository usuarioRepository,
-                             MaquinaRepository maquinaRepository) {
+                             MaquinaRepository maquinaRepository,
+                             SesionUsuario sesionUsuario) {
         this.reservaRepository = reservaRepository;
-        this.usuarioRepository = usuarioRepository;
         this.maquinaRepository = maquinaRepository;
+        this.sesionUsuario = sesionUsuario;
     }
 
     /** Muestra el formulario de reserva para la maquina elegida. */
@@ -59,24 +62,23 @@ public class ReservaController {
         return "cliente/reservar";
     }
 
-    /** Crea la reserva y vuelve a la disponibilidad. */
+    /** Crea la reserva y vuelve a la disponibilidad con mensaje. */
     @PostMapping("/cliente/reservar")
     public String registrarReserva(@RequestParam Long maquinaId,
-                                   @RequestParam String celular,
                                    @RequestParam String fecha,
                                    @RequestParam String horaInicio,
                                    @RequestParam String horaFin,
                                    RedirectAttributes redireccion) {
 
-        Optional<Usuario> usuario = usuarioRepository.findByCelular(celular);
-        if (usuario.isEmpty()) {
+        Usuario usuario = sesionUsuario.usuarioActual().orElse(null);
+        if (usuario == null) {
             redireccion.addFlashAttribute("error",
-                    "Ese celular no esta registrado. Registrate primero para poder reservar.");
+                    "Debes iniciar sesion como cliente para poder reservar.");
             return "redirect:/cliente/disponibilidad";
         }
 
         Reserva reserva = new Reserva();
-        reserva.setUsuarioId(usuario.get().getId());
+        reserva.setUsuarioId(usuario.getId());
         reserva.setMaquinaId(maquinaId);
         reserva.setFecha(LocalDate.parse(fecha));
         reserva.setHoraInicio(LocalTime.parse(horaInicio));
@@ -88,7 +90,32 @@ public class ReservaController {
         reservaRepository.save(reserva);
 
         redireccion.addFlashAttribute("mensaje",
-                "Reserva registrada. Pasa al local para validar el pago.");
-        return "redirect:/cliente/disponibilidad";
+                "Reserva registrada exitosamente. Pasa al local para validar el pago.");
+        return "redirect:/cliente/historial";
+    }
+
+    /** Historial de reservas del cliente (permite filtrar por celular). */
+    @GetMapping("/cliente/historial")
+    public String verHistorial(Model modelo) {
+        Usuario usuario = sesionUsuario.usuarioActual().orElse(null);
+
+        List<Reserva> reservas;
+        if (usuario != null) {
+            reservas = reservaRepository.findAll().stream()
+                    .filter(r -> r.getUsuarioId() != null && r.getUsuarioId().equals(usuario.getId()))
+                    .toList();
+            modelo.addAttribute("usuario", usuario);
+        } else {
+            reservas = List.of();
+        }
+
+        modelo.addAttribute("reservas", reservas);
+
+        // Mapa de maquinaId a codigo (M-01, M-02, etc.) para facil visualizacion
+        Map<Long, String> maquinasMap = maquinaRepository.findAll().stream()
+                .collect(Collectors.toMap(Maquina::getId, Maquina::getCodigo, (a, b) -> a));
+        modelo.addAttribute("maquinasMap", maquinasMap);
+
+        return "cliente/historial";
     }
 }

@@ -7,6 +7,8 @@ on:
       - develop
       - 'feature/*'
       - 'hotfix/*'
+      - 'release/*'
+      - 'fix/*'
   pull_request:
     branches:
       - main
@@ -28,4 +30,11 @@ jobs:
 
       - name: Ejecutar pruebas con Maven
         working-directory: lancenterhd
-        run: mvn -B test
+        run: mvn -B package
+
+      - name: Publicar JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: lancenterhd-jar
+          path: lancenterhd/target/*.jar
+          if-no-files-found: error
