@@ -6,7 +6,7 @@
   Fragmento compartido del navbar. Recibe:
     - paginaActiva: clave de la pagina actual para resaltar su enlace.
   Lee del modelo (expuestos por AtributosVista):
-    - autenticado, rolActual (ADMIN/OPERADOR/CLIENTE) y nombreUsuario.
+    - sesionActiva, esCliente, esOperador, esAdmin y nombreUsuario.
 -->
 <nav th:fragment="navbar(paginaActiva)" class="navbar navbar-expand-lg lr-navbar sticky-top">
     <div class="container">
@@ -38,7 +38,7 @@
                         <i class="bi bi-cpu me-1" th:classappend="${paginaActiva == 'disponibilidad'} ? ' text-info' : ''"></i> Disponibilidad
                     </a>
                 </li>
-                <li class="nav-item" th:if="${autenticado and rolActual == 'CLIENTE'}">
+                <li class="nav-item" th:if="${sesionActiva and esCliente}">
                     <a class="nav-link px-3 py-2 rounded-3"
                        th:classappend="${paginaActiva == 'historial'} ? ' active text-white fw-semibold' : ' text-white-50'"
                        th:style="${paginaActiva == 'historial'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
@@ -46,7 +46,7 @@
                         <i class="bi bi-clock-history me-1" th:classappend="${paginaActiva == 'historial'} ? ' text-info' : ''"></i> Mis Reservas
                     </a>
                 </li>
-                <li class="nav-item" th:if="${rolActual == 'OPERADOR'}">
+                <li class="nav-item" th:if="${sesionActiva and esOperador}">
                     <a class="nav-link px-3 py-2 rounded-3"
                        th:classappend="${paginaActiva == 'operador'} ? ' active text-white fw-semibold' : ' text-white-50'"
                        th:style="${paginaActiva == 'operador'} ? 'background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.25);' : ''"
@@ -54,7 +54,7 @@
                         <i class="bi bi-shield-lock me-1" th:classappend="${paginaActiva == 'operador'} ? ' text-info' : ''"></i> Consola Operador
                     </a>
                 </li>
-                <li class="nav-item" th:if="${rolActual == 'ADMIN'}">
+                <li class="nav-item" th:if="${sesionActiva and esAdmin}">
                     <a class="nav-link px-3 py-2 rounded-3"
                        th:classappend="${paginaActiva == 'admin'} ? ' active text-white fw-semibold' : ' text-white-50'"
                        th:style="${paginaActiva == 'admin'} ? 'background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35);' : ''"
@@ -68,7 +68,7 @@
                     <span class="lr-pulse-dot lr-pulse-available"></span> LAN Center Online
                 </span>
 
-                <th:block th:if="${!autenticado}">
+                <th:block th:if="${!sesionActiva}">
                     <a th:href="@{/auth/login}" class="btn btn-sm lr-btn-outline">
                         <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
                     </a>
@@ -77,9 +77,9 @@
                     </a>
                 </th:block>
 
-                <th:block th:if="${autenticado}">
+                <th:block th:if="${sesionActiva}">
                     <span class="badge rounded-pill border px-3 py-2 d-none d-md-inline-flex align-items-center me-2"
-                          th:classappend="${rolActual == 'ADMIN' ? ' bg-purple-subtle text-light border-secondary' : (rolActual == 'OPERADOR' ? ' bg-info-subtle text-info border-info-subtle' : ' bg-primary-subtle text-primary border-primary-subtle')}">
+                          th:classappend="${esAdmin ? ' bg-purple-subtle text-light border-secondary' : (esOperador ? ' bg-info-subtle text-info border-info-subtle' : ' bg-primary-subtle text-primary border-primary-subtle')}">
                         <i class="bi bi-person-circle me-1"></i>
                         <span th:text="${nombreUsuario}">Usuario</span>
                     </span>
