@@ -52,6 +52,26 @@ public class AtributosVista {
         return !esAnonimo(SecurityContextHolder.getContext().getAuthentication());
     }
 
+    @ModelAttribute("sesionActiva")
+    public boolean sesionActiva() {
+        return autenticado();
+    }
+
+    @ModelAttribute("esCliente")
+    public boolean esCliente() {
+        return "CLIENTE".equals(rolActual());
+    }
+
+    @ModelAttribute("esOperador")
+    public boolean esOperador() {
+        return "OPERADOR".equals(rolActual());
+    }
+
+    @ModelAttribute("esAdmin")
+    public boolean esAdmin() {
+        return "ADMIN".equals(rolActual());
+    }
+
     private boolean esAnonimo(Authentication auth) {
         return auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken;
     }
