@@ -50,8 +50,9 @@
         <!-- Tarjetas de Acceso por Módulos -->
         <div class="row g-4 justify-content-center">
 
-            <!-- Cliente -->
-            <div class="col-md-6 col-lg-3">
+            <!-- Cliente: visible para visitantes y clientes -->
+            <div class="col-md-6 col-lg-3"
+                th:if="${!autenticado or esCliente}">
                 <div class="lr-card p-4 h-100 d-flex flex-column justify-content-between position-relative">
                     <div>
                         <div class="rounded-3 p-3 mb-3 d-inline-block lr-icon-box-cyan">
