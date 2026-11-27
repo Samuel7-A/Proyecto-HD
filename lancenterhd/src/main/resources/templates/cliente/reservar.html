@@ -36,6 +36,19 @@
     <!-- Contenido Principal -->
     <main class="container my-4 my-md-5">
 
+        <!-- Mensajes Flash de Éxito / Error -->
+        <div th:if="${mensaje}" class="alert lr-alert-success alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
+            <div th:text="${mensaje}">Operación exitosa.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${error}" class="alert lr-alert-danger alert-dismissible fade show border-0 shadow-sm d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
+            <div th:text="${error}">Error al registrar la reserva.</div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
         <!-- Breadcrumb / Volver -->
         <nav aria-label="breadcrumb" class="mb-4">
             <ol class="breadcrumb">
@@ -102,6 +115,10 @@
                             <span class="text-white-50 small">Tarifa del Servicio</span>
                             <span class="text-white fw-bold font-gamer fs-5">S/ 5.00 <small class="text-white-50 fw-normal fs-6">/ hora</small></span>
                         </div>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="text-white-50 small">Duración / Total estimado</span>
+                            <span class="text-info fw-bold font-gamer fs-5" id="resumenCosto">S/ 5.00 <small class="text-white-50 fw-normal fs-6">(1.0 h)</small></span>
+                        </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="text-white-50 small">Método de cobro</span>
                             <span class="text-info small fw-semibold">Presencial en Mostrador</span>
@@ -144,10 +161,9 @@
                         <div class="row g-4">
                             <!-- La reserva queda asociada a la cuenta autenticada -->
                             <div class="col-12">
-                                <div class="alert alert-info border-0 mb-0 py-2 px-3 small"
-                                     style="background: rgba(0, 242, 254, 0.1); color: #a5f3fc; border-left: 3px solid #00f2fe !important;">
+                                <div class="alert lr-alert-info border-0 mb-0 py-2 px-3 small">
                                     <i class="bi bi-person-check me-1"></i>
-                                    La reserva se asociara a tu cuenta (<span th:text="${nombreUsuario}">tu cuenta</span>).
+                                    La reserva se asociará a tu cuenta (<span th:text="${nombreUsuario}">tu cuenta</span>).
                                 </div>
                             </div>
 
@@ -158,7 +174,9 @@
                                 </label>
                                 <div class="input-group lr-input-group">
                                     <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
-                                    <input type="date" id="fecha" name="fecha" class="form-control" required>
+                                    <input type="date" id="fecha" name="fecha" class="form-control"
+                                           th:value="${param.fecha}" required>
+                                    <div class="invalid-feedback">Selecciona una fecha válida (hoy o posterior).</div>
                                 </div>
                             </div>
 
@@ -169,7 +187,9 @@
                                 </label>
                                 <div class="input-group lr-input-group">
                                     <span class="input-group-text"><i class="bi bi-clock"></i></span>
-                                    <input type="time" id="horaInicio" name="horaInicio" class="form-control" required>
+                                    <input type="time" id="horaInicio" name="horaInicio" class="form-control"
+                                           th:value="${param.horaInicio}" required>
+                                    <div class="invalid-feedback">Selecciona la hora de inicio.</div>
                                 </div>
                             </div>
 
@@ -180,6 +200,7 @@
                                 <div class="input-group lr-input-group">
                                     <span class="input-group-text"><i class="bi bi-clock-history"></i></span>
                                     <input type="time" id="horaFin" name="horaFin" class="form-control" required>
+                                    <div class="invalid-feedback" id="horaFinFeedback">La hora de fin debe ser posterior a la hora de inicio.</div>
                                 </div>
                             </div>
 
@@ -220,12 +241,80 @@
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Establecer fecha de hoy por defecto si está vacía
         document.addEventListener('DOMContentLoaded', function() {
+            var TARIFA_POR_HORA = 5.0;
             var fechaInput = document.getElementById('fecha');
-            if (fechaInput && !fechaInput.value) {
-                var today = new Date().toISOString().split('T')[0];
-                fechaInput.value = today;
+            var horaInicioInput = document.getElementById('horaInicio');
+            var horaFinInput = document.getElementById('horaFin');
+            var resumenCosto = document.getElementById('resumenCosto');
+            var horaFinFeedback = document.getElementById('horaFinFeedback');
+            var form = document.getElementById('formReserva');
+
+            var today = new Date().toISOString().split('T')[0];
+            if (fechaInput) {
+                fechaInput.min = today;
+                if (!fechaInput.value) {
+                    fechaInput.value = today;
+                }
+            }
+
+            function aMinutos(hhmm) {
+                if (!hhmm || hhmm.indexOf(':') === -1) return null;
+                var partes = hhmm.split(':');
+                return parseInt(partes[0], 10) * 60 + parseInt(partes[1], 10);
+            }
+
+            function actualizarResumenYValidacion() {
+                if (!horaInicioInput || !horaFinInput) return;
+                var ini = aMinutos(horaInicioInput.value);
+                var fin = aMinutos(horaFinInput.value);
+
+                if (ini !== null && fin !== null && fin <= ini) {
+                    horaFinInput.setCustomValidity('La hora de fin debe ser posterior a la hora de inicio.');
+                    if (horaFinFeedback) {
+                        horaFinFeedback.textContent = 'La hora de fin debe ser posterior a la hora de inicio.';
+                    }
+                } else {
+                    horaFinInput.setCustomValidity('');
+                    if (horaFinFeedback) {
+                        horaFinFeedback.textContent = 'Selecciona la hora de fin.';
+                    }
+                }
+
+                if (resumenCosto) {
+                    if (ini !== null && fin !== null && fin > ini) {
+                        var horas = (fin - ini) / 60.0;
+                        var total = (horas * TARIFA_POR_HORA).toFixed(2);
+                        resumenCosto.innerHTML = 'S/ ' + total + ' <small class="text-white-50 fw-normal fs-6">(' + horas.toFixed(1) + ' h)</small>';
+                    } else {
+                        resumenCosto.innerHTML = 'S/ 5.00 <small class="text-white-50 fw-normal fs-6">/ hora</small>';
+                    }
+                }
+            }
+
+            if (horaInicioInput && horaFinInput) {
+                if (horaInicioInput.value && !horaFinInput.value) {
+                    var iniMin = aMinutos(horaInicioInput.value);
+                    if (iniMin !== null && iniMin + 60 < 24 * 60) {
+                        var h = String(Math.floor((iniMin + 60) / 60)).padStart(2, '0');
+                        var m = String((iniMin + 60) % 60).padStart(2, '0');
+                        horaFinInput.value = h + ':' + m;
+                    }
+                }
+                horaInicioInput.addEventListener('change', actualizarResumenYValidacion);
+                horaFinInput.addEventListener('change', actualizarResumenYValidacion);
+                actualizarResumenYValidacion();
+            }
+
+            if (form) {
+                form.addEventListener('submit', function(event) {
+                    actualizarResumenYValidacion();
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                });
             }
         });
     </script>
