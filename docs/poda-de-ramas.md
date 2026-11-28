@@ -1,7 +1,7 @@
 # Poda de ramas - LanReserve
 
 **Proyecto:** LanReserve (Proyecto-HD) - Herramientas de Desarrollo II
-**Avance:** APF3 - Optimizacion
+**Avance:** APF3 - Optimización
 **Fecha de ejecución:** 17 de noviembre de 2026
 **Responsable:** Keny Evangelista (Kaiilo1020)
 **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
@@ -79,8 +79,8 @@ historial de la decisión vive en el Pull Request, no en el nombre de la rama.
 
 | # | Salvaguarda | Cómo se comprobó |
 |---|---|---|
-| 1 | Nunca borrar una rama con PR abierto | `gh pr list --state open` antes de la poda; las tres ramas con PR abierto (`docs/informe-apf2`, `feature/bd-docker`, `infra/proteccion-ramas`) se excluyeron explícitamente |
-| 2 | Nunca borrar una rama con commits fuera de `develop` y `main` | `git merge-base --is-ancestor` sobre las 28 ramas; solo pasaron las 23 integradas |
+| 1 | Nunca borrar una rama con PR abierto | `gh pr list --state open` antes de la poda; tres ramas tenían un PR sin fusionar en ese momento (`docs/informe-apf2` PR #23, `feature/bd-docker` PR #34 e `infra/proteccion-ramas` PR #36) y se excluyeron de la lista de borrado |
+| 2 | Nunca borrar una rama con commits fuera de `develop` y `main` | `git merge-base --is-ancestor` sobre las 28 ramas; solo pasaron las 23 que ya estaban dentro |
 | 3 | Nunca borrar `main` ni `develop` | Excluidas por lista explícita antes de generar los comandos |
 
 ### 3.4 Consecuencia de un error
@@ -155,13 +155,20 @@ gh api "repos/Samuel7-A/Proyecto-HD/branches?per_page=100" --jq 'length'
 Se listaron las 28 ramas y se clasificaron en tres grupos:
 
 - **2 permanentes**, que nunca se tocan: `main` y `develop`.
-- **3 con trabajo vivo**, excluidas porque tenían un Pull Request abierto:
-  `docs/informe-apf2` (PR #23), `feature/bd-docker` (PR #34) e
-  `infra/proteccion-ramas` (PR #36). Esta última además no estaba integrada:
-  sus commits aún no existían en `develop`.
+- **3 con trabajo vivo**, excluidas porque tenían un Pull Request sin fusionar
+  en el momento de la poda: `docs/informe-apf2` (PR #23), `feature/bd-docker`
+  (PR #34) e `infra/proteccion-ramas` (PR #36). Estas dos últimas además no
+  estaban integradas: sus commits aún no existían en `develop`.
 - **23 integradas**, todas candidatas a poda.
 
 La comprobación fue: `2 + 3 + 23 = 28`, el total de partida.
+
+Esas tres ramas no quedaron fuera del historial. Al fusionarse sus Pull
+Requests se borraron por el mecanismo automático de la sección 6.1: los PR #34
+y #36 el 17 de noviembre a las 16:40 y 16:41, y el PR #23 el 18 de noviembre a
+las 05:45. Por eso el repositorio pasó de 28 a 3 ramas con **25 eliminaciones
+en total**: 23 en la poda manual más las 2 que se fusionaron esa misma tarde, y
+`docs/informe-apf2` al día siguiente con la fusión del #23.
 
 ### 4.3 Borrado
 
@@ -191,67 +198,92 @@ siguen intactos.
 | Métrica | Antes | Después |
 |---|---|---|
 | Ramas remotas | 28 | 3 |
-| Reducción | - | **89 %** |
+| Ramas eliminadas | - | **25** |
+| Reducción | - | **89,29 %** |
 | PRs afectados | - | **0** |
 | Commits perdidos | - | **0** |
+
+Las 3 que quedaron fueron `main`, `develop` y `docs/informe-apf2`. Esta última
+esperaba la fusión de su Pull Request, que llegó al día siguiente; al fusionarse
+se borró sola y desde entonces el repositorio quedó con 2 ramas permanentes.
 
 ---
 
 ## 5. Evidencia
 
-### 5.1 Las 23 ramas eliminadas y el PR que integró cada una
+### 5.1 Las 25 ramas eliminadas y el PR que integró cada una
 
-| # | Rama eliminada | Integrada por | Fecha |
-|---|---|---|---|
-| 1 | `Rama-Secundaria` | *(ejercicio inicial de ramificación, sin PR)* | - |
-| 2 | `chore/ci` | PR #14 | 18-oct-2026 |
-| 3 | `docs/readme-develop` | PR #20 | 19-oct-2026 |
-| 4 | `feature/auth` | PR #1 | 02-sep-2026 |
-| 5 | `feature/auth-completo` | PR #7 | 18-sep-2026 |
-| 6 | `feature/consola-controller` | PR #16 | 18-oct-2026 |
-| 7 | `feature/disponibilidad-controller` | PR #18 | 19-oct-2026 |
-| 8 | `feature/docs-flujos` | PR #9 | 18-oct-2026 |
-| 9 | `feature/frontend-admin-operador` | PR #29 | 21-oct-2026 |
-| 10 | `feature/frontend-cliente` | PR #8 | 18-oct-2026 |
-| 11 | `feature/frontend-operador` | PR #6 | 18-oct-2026 |
-| 12 | `feature/maquina` | PR #17 | 18-oct-2026 |
-| 13 | `feature/panel-administrador` | PR #28 | 21-oct-2026 |
-| 14 | `feature/redesign-cliente` | PR #27 | 21-oct-2026 |
-| 15 | `feature/registro-presencial` | PR #12 | 18-oct-2026 |
-| 16 | `feature/reserva-controller` | PR #25 | 19-oct-2026 |
-| 17 | `feature/reserva-repository` | PR #19 | 19-oct-2026 |
-| 18 | `feature/reservas` | PR #2 | 14-sep-2026 |
-| 19 | `fix/arranque-datos` | PR #13 | 18-oct-2026 |
-| 20 | `fix/consola-reservas-reales` | PR #26 | 21-oct-2026 |
-| 21 | `fix/disponibilidad-render` | PR #15 | 18-oct-2026 |
-| 22 | `hotfix/docs-readme` | PR #24 | 19-oct-2026 |
-| 23 | `release/v0.2.0` | PR #30 | 21-oct-2026 |
+| # | Rama eliminada | Integrada por | Fecha | Cuándo se borró |
+|---|---|---|---|---|
+| 1 | `Rama-Secundaria` | *(ejercicio inicial de ramificación, sin PR)* | - | En la poda |
+| 2 | `chore/ci` | PR #14 | 18-oct-2026 | En la poda |
+| 3 | `docs/readme-develop` | PR #20 | 19-oct-2026 | En la poda |
+| 4 | `feature/auth` | PR #1 | 02-sep-2026 | En la poda |
+| 5 | `feature/auth-completo` | PR #7 | 18-sep-2026 | En la poda |
+| 6 | `feature/consola-controller` | PR #16 | 18-oct-2026 | En la poda |
+| 7 | `feature/disponibilidad-controller` | PR #18 | 19-oct-2026 | En la poda |
+| 8 | `feature/docs-flujos` | PR #9 | 18-oct-2026 | En la poda |
+| 9 | `feature/frontend-admin-operador` | PR #29 | 21-oct-2026 | En la poda |
+| 10 | `feature/frontend-cliente` | PR #8 | 18-oct-2026 | En la poda |
+| 11 | `feature/frontend-operador` | PR #6 | 18-oct-2026 | En la poda |
+| 12 | `feature/maquina` | PR #17 | 18-oct-2026 | En la poda |
+| 13 | `feature/panel-administrador` | PR #28 | 21-oct-2026 | En la poda |
+| 14 | `feature/redesign-cliente` | PR #27 | 21-oct-2026 | En la poda |
+| 15 | `feature/registro-presencial` | PR #12 | 18-oct-2026 | En la poda |
+| 16 | `feature/reserva-controller` | PR #25 | 19-oct-2026 | En la poda |
+| 17 | `feature/reserva-repository` | PR #19 | 19-oct-2026 | En la poda |
+| 18 | `feature/reservas` | PR #2 | 14-sep-2026 | En la poda |
+| 19 | `fix/arranque-datos` | PR #13 | 18-oct-2026 | En la poda |
+| 20 | `fix/consola-reservas-reales` | PR #26 | 21-oct-2026 | En la poda |
+| 21 | `fix/disponibilidad-render` | PR #15 | 18-oct-2026 | En la poda |
+| 22 | `hotfix/docs-readme` | PR #24 | 19-oct-2026 | En la poda |
+| 23 | `release/v0.2.0` | PR #30 | 21-oct-2026 | En la poda |
+| 24 | `feature/bd-docker` | PR #34 | 17-nov-2026 | Al fusionar el #34 |
+| 25 | `infra/proteccion-ramas` | PR #36 | 17-nov-2026 | Al fusionar el #36 |
 
-**22 de las 23 ramas tienen su Pull Request documentado.** La única excepción es
+**Las 23 primeras se borraron en la poda del 17 de noviembre.** Las dos últimas
+no se tocaron ese día porque tenían un Pull Request sin fusionar; se borraron
+solas cuando sus PR se fusionaron esa misma tarde, por el borrado automático de
+la sección 6.1. Una vigésima sexta rama, `docs/informe-apf2`, esperó hasta el 18
+de noviembre y corrió la misma suerte al fusionarse su PR #23.
+
+**24 de las 25 ramas tienen su Pull Request documentado.** La única excepción es
 `Rama-Secundaria`, del ejercicio inicial de ramificación del APF1: su contenido
 ya estaba en `main` y nunca tuvo PR propio.
 
 ### 5.2 Las ramas que se conservaron y por qué
 
-| Rama | Motivo |
-|---|---|
-| `main` | Rama permanente y estable |
-| `develop` | Rama permanente de integración |
-| `docs/informe-apf2` | PR #23 abierto - se poda al fusionarse |
-| `feature/bd-docker` | PR #34 abierto - se poda al fusionarse |
-| `infra/proteccion-ramas` | PR #36 abierto - se poda al fusionarse |
+En el momento de la poda se dejaron cinco ramas remotas: las dos permanentes y
+las tres que tenían un Pull Request sin fusionar.
 
-Las tres ramas de trabajo se podaron **el mismo día** en que se fusionaron sus
-respectivos Pull Requests, lo que confirma que la política se aplica de forma
-sistemática y no una sola vez.
+| Rama | Motivo en ese momento | Estado actual |
+|---|---|---|
+| `main` | Rama permanente y estable | Existe |
+| `develop` | Rama permanente de integración | Existe |
+| `docs/informe-apf2` | PR #23 sin fusionar - se poda al fusionarse | Eliminada el 18-nov al fusionar el #23 |
+| `feature/bd-docker` | PR #34 sin fusionar - se poda al fusionarse | Eliminada el 17-nov al fusionar el #34 |
+| `infra/proteccion-ramas` | PR #36 sin fusionar - se poda al fusionarse | Eliminada el 17-nov al fusionar el #36 |
+
+Las tres ramas de trabajo se podaron solas al fusionarse sus Pull Requests, tal
+como estaba previsto. Los PR #34 y #36 cerraron el mismo 17 de noviembre, unas
+horas después de la poda manual; el #23 cerró al día siguiente. Ninguna se borró
+a mano: las eliminó el borrado automático de la sección 6.1 en el momento de la
+fusión, que es exactamente el comportamiento que se buscaba.
 
 ### 5.3 Estado final
+
+Inmediatamente después de la poda manual quedaron tres ramas remotas:
 
 ```
 main
 develop
-docs/informe-apf2   ← única superviviente de trabajo, a la espera del PR #23
+docs/informe-apf2   <- en espera de la fusión de su Pull Request
 ```
+
+Al fusionarse esa última rama, el repositorio quedó con las dos permanentes.
+Desde entonces las ramas de trabajo nacen, se integran con un PR revisado y se
+borran solas al fusionarse. Las ramas abiertas que se ven en el repositorio
+pertenecen a los avances siguientes (APF3 y proyecto final), no a la poda.
 
 ---
 
@@ -270,15 +302,21 @@ fusión. La poda deja de depender de que alguien se acuerde.
 
 ### 6.2 Protección de `develop` y `main`
 
-En **Settings → Branches** se configuró, para ambas ramas:
+En **Settings → Branches** se configuró la protección de `develop` con:
 
 - `Require a pull request before merging`
-- **1 aprobación** obligatoria
 - `Require status checks to pass` con el check **build** obligatorio
 
-Con esto, ningún cambio entra sin revisión y sin pasar las pruebas. Además, el
-flujo obliga a que cada integración tenga su PR, de modo que **toda
-rama pueda podarse después con trazabilidad completa**.
+Con esto, ningún cambio entra a `develop` sin pasar las pruebas. La regla de
+revisión por pares se sostiene en el acuerdo del equipo: cada PR se revisa antes
+de fusionarlo, y el flujo obliga a que toda integración pase por un PR, de modo
+que **toda rama pueda podarse después con trazabilidad completa**.
+
+Al cierre de este documento la protección está aplicada sobre `develop`. `main`
+todavía no la tiene, y la aprobación obligatoria no está activada: el check de
+CI es el único requisito que bloquea una fusión. Conviene completar ambas cosas
+antes de la entrega final, porque sin revisión obligatoria la salvaguarda 1 de
+la sección 3.3 depende de la disciplina del equipo y no del repositorio.
 
 ### 6.3 Hábito de equipo
 
@@ -306,15 +344,17 @@ procedimiento de la sección 3.
 | | |
 |---|---|
 | Ramas antes | 28 |
-| Ramas después | 3 |
-| Ramas eliminadas | 23 |
-| Reducción | 89 % |
+| Ramas después de la poda | 3 |
+| Ramas eliminadas | 25 |
+| Reducción | 89,29 % |
 | Pull Requests afectados | 0 |
 | Commits perdidos | 0 |
-| Ramas con PR documentado | 22 de 23 |
+| Ramas con PR documentado | 24 de 25 |
 | Automatización | Borrado automático activado |
 
-La poda convirtio un repositorio con 28 ramas, la mayoria ya integradas y sin
-funcion, en uno con tres referencias vivas y significativas, sin perder un solo
+La poda convirtió un repositorio con 28 ramas, la mayoría ya integradas y sin
+función, en uno con dos referencias vivas y significativas, sin perder un solo
 commit y conservando la trazabilidad completa de cada integración en su Pull
 Request.
+
+Las cifras se verificaron contra la API de GitHub el 28 de noviembre de 2026.
