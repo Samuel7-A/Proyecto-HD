@@ -4,7 +4,7 @@ Plataforma web para la reserva de máquinas en centros de cómputo y lan centers
 
 **Curso:** Herramientas de Desarrollo (100000S61T) — Universidad Tecnológica del Perú (UTP)
 **Ciclo:** 2026 – Ciclo 2 (Agosto) · **Carrera:** Ingeniería de Software / Sistemas e Informática
-**Etapa actual:** Avance de Proyecto Final 2 (APF2 — Semana 11)
+**Etapa actual:** Avance de Proyecto Final 3 (APF3 — Semana 15 · Optimización)
 
 ---
 
@@ -42,7 +42,7 @@ Desarrollar y desplegar una plataforma web que permita la reserva de máquinas e
 |---|---|
 | **Cliente** | Consulta disponibilidad, reserva, cancela y ve sus reservas |
 | **Operador** | Valida pagos en el local, libera máquinas y marca no-shows |
-| **Administrador** | Gestiona máquinas, tarifas, horarios, operadores y el panel de ocupación |
+| **Administrador** | Consulta el panel de ocupación: máquinas por estado, reservas por estado e ingresos cobrados. La gestión de máquinas y tarifas está planificada |
 
 ---
 
@@ -72,16 +72,21 @@ PENDIENTE_PAGO ──(operador valida pago)──▶ PAGADO ──(operador libe
 - Reserva presencial en mostrador: el operador registra al cliente (nombre + celular) y la reserva nace en `PAGADO` (`canal = PRESENCIAL`); la reserva web nace en `PENDIENTE_PAGO` (`canal = WEB`). Un mismo sistema, dos canales.
 
 ---
-
 ## ⚙️ Funcionalidades
 
-- Registro y autenticación por roles
-- CRUD de máquinas y tarifas
+### Implementadas
+- Registro y autenticación por roles (CLIENTE, OPERADOR, ADMIN)
 - Consulta de disponibilidad por fecha y horario (bloques de 1 hora)
-- Reserva de máquinas con ciclo de estado completo
+- Reserva web con ciclo de estado (PENDIENTE_PAGO, PAGADO, VENCIDA)
 - Validación de pago simulado y liberación por el operador
-- Panel de ocupación categorizado (ocupación, demanda, ingresos, operativa)
+- Panel de ocupación categorizado (ocupación, demanda, ingresos, operativa), de solo lectura
 - Reserva presencial en mostrador por el operador (CU-12)
+
+### Planificadas
+- CRUD de máquinas y tarifas desde el panel de administración
+- Cancelación y finalización de reservas por parte del cliente
+- Gestión de usuarios y cambio de contraseña
+- Activación de cuenta con código de un solo uso
 
 ---
 
@@ -158,7 +163,7 @@ En Windows, usar `.\mvnw.cmd test`.
 - Cada funcionalidad se desarrolla en su rama `feature/` y se fusiona a `develop` vía Pull Request, con revisión de al menos un compañero.
 - Los commits usan mensajes semánticos: `feat:`, `fix:`, `docs:`, `refactor:`.
 - Los conflictos de merge se resuelven documentando la decisión en el PR.
-- Cada avance se etiqueta con un tag/release (`v0.2.0` para el APF2 (objetivo)).
+- Cada avance se etiqueta con un tag/release (`v0.1.0` para el APF1 y `v0.2.0` para el APF2).
 
 ---
 
@@ -168,7 +173,7 @@ En Windows, usar `.\mvnw.cmd test`.
 |---|---|---|
 | Repo Git/GitHub, branching, PRs | **APF1** | 6 |
 | Colaboración + issues + CI | **APF2** | 11 |
-| CD + pipeline automatizado | **APF3** | 15 |
+| Optimización, documentación y poda de ramas | **APF3** | 15 |
 | Docker + cloud + demo final | **PROY** | 18 |
 
 ---
@@ -196,6 +201,9 @@ En Windows, usar `.\mvnw.cmd test`.
 - [x] Autenticación de clientes y Administrador
 - [x] Módulo Operador (validar pago, liberar máquina y marcar no-show)
 - [x] Vistas Thymeleaf de Cliente, Operador y Administrador
-- [x] Docker y CI/CD (Docker + Compose operativo; CI activo en cada push; CD pendiente para APF3)
+- [x] Docker y Compose operativo
+- [x] CI activo en cada push (GitHub Actions, build con pruebas)
 - [x] APF2 — tag `v0.2.0` publicado
-
+- [x] APF3 — refactorización, documentación y poda de ramas
+- [ ] CD automatizado (despliegue continuo)
+- [ ] CRUD de máquinas y tarifas
