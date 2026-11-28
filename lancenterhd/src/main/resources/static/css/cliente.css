@@ -417,6 +417,12 @@ body.lr-body {
     color: #fecdd3 !important;
 }
 
+.lr-alert-info {
+    background: rgba(0, 242, 254, 0.12) !important;
+    border-left: 4px solid var(--lr-cyan) !important;
+    color: #a5f3fc !important;
+}
+
 /* Badges de sección temáticos */
 .lr-section-badge-indigo {
     background: rgba(99, 102, 241, 0.2);

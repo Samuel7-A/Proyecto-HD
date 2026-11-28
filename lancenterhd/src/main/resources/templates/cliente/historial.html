@@ -148,31 +148,32 @@
                                 </div>
                             </td>
                             <td>
-                                <span th:if="${r.canal.name() == 'WEB'}" class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                <span th:if="${r.canal != null and r.canal.name() == 'WEB'}" class="badge bg-primary-subtle text-primary border border-primary-subtle">
                                     <i class="bi bi-globe me-1"></i> Web
                                 </span>
-                                <span th:if="${r.canal.name() == 'PRESENCIAL'}" class="badge bg-secondary-subtle text-light border border-secondary-subtle">
+                                <span th:if="${r.canal != null and r.canal.name() == 'PRESENCIAL'}" class="badge bg-secondary-subtle text-light border border-secondary-subtle">
                                     <i class="bi bi-shop me-1"></i> Presencial
                                 </span>
                             </td>
                             <td>
-                                <span class="text-white fw-semibold font-gamer" th:text="'S/ ' + ${r.costo}">S/ 5.00</span>
+                                <span class="text-white fw-semibold font-gamer"
+                                      th:text="${r.costo != null ? 'S/ ' + #numbers.formatDecimal(r.costo, 1, 2) : 'S/ 0.00'}">S/ 5.00</span>
                             </td>
                             <td>
                                 <!-- Badges Luminosos de Estado de Reserva -->
-                                <span th:if="${r.estado.name() == 'PENDIENTE_PAGO'}" class="badge lr-badge-glow lr-badge-maintenance">
+                                <span th:if="${r.estado != null and r.estado.name() == 'PENDIENTE_PAGO'}" class="badge lr-badge-glow lr-badge-maintenance">
                                     <i class="bi bi-hourglass-split me-1"></i> Pendiente de Pago
                                 </span>
-                                <span th:if="${r.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
+                                <span th:if="${r.estado != null and r.estado.name() == 'PAGADO'}" class="badge lr-badge-glow lr-badge-available">
                                     <span class="lr-pulse-dot lr-pulse-available"></span> Pagado
                                 </span>
-                                <span th:if="${r.estado.name() == 'COMPLETADA'}" class="badge lr-badge-completed">
+                                <span th:if="${r.estado != null and r.estado.name() == 'COMPLETADA'}" class="badge lr-badge-completed">
                                     <i class="bi bi-check2-all me-1"></i> Completada
                                 </span>
-                                <span th:if="${r.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
+                                <span th:if="${r.estado != null and r.estado.name() == 'CANCELADA'}" class="badge bg-secondary text-secondary-emphasis">
                                     <i class="bi bi-x-circle me-1"></i> Cancelada
                                 </span>
-                                <span th:if="${r.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
+                                <span th:if="${r.estado != null and r.estado.name() == 'VENCIDA'}" class="badge lr-badge-glow lr-badge-occupied">
                                     <i class="bi bi-exclamation-triangle-fill me-1"></i> Vencida (No-Show)
                                 </span>
                             </td>
