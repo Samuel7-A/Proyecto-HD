@@ -1,7 +1,7 @@
-# Poda de ramas — LanReserve
+# Poda de ramas - LanReserve
 
-**Proyecto:** LanReserve (Proyecto-HD) — Herramientas de Desarrollo II
-**Avance:** APF3 — Optimización
+**Proyecto:** LanReserve (Proyecto-HD) - Herramientas de Desarrollo II
+**Avance:** APF3 - Optimizacion
 **Fecha de ejecución:** 17 de noviembre de 2026
 **Responsable:** Keny Evangelista (Kaiilo1020)
 **Repositorio:** https://github.com/Samuel7-A/Proyecto-HD
@@ -94,6 +94,50 @@ git push origin <sha-del-commit>:refs/heads/<rama-recuperada>
 
 Esto reduce el riesgo, pero **no sustituye a la verificación previa**.
 
+### 3.5 Los dos casos en que `merge-base` no alcanza
+
+`git merge-base --is-ancestor` responde una sola pregunta: ¿está este commit
+dentro de aquella historia? Hay dos situaciones del repositorio donde esa
+respuesta no basta.
+
+**Ramas locales que nunca se subieron.** El criterio se aplica sobre
+`origin/<rama>`, así que cualquier rama que exista solo en disco queda fuera del
+inventario. No aparece en `git branch -r`, no tiene upstream y ningún script que
+recorra las referencias remotas la va a listar. La poda del APF3 se hizo sobre
+las 28 ramas remotas, y `fix/autorizacion-por-roles` (21 de octubre, con un
+commit de 855 líneas en 16 archivos) nunca formó parte de ese inventario porque
+jamás se subió.
+
+La comprobación complementaria es local:
+
+```bash
+git branch -vv                                          # lista todas, marca las que perdieron su remoto
+git branch --no-merged origin/develop                   # las que NO están dentro de develop
+git rev-list --count <rama> ^origin/develop ^origin/main
+```
+
+**Contenido duplicado por otro camino.** Una rama puede no ser ancestro de
+`develop` y aun así no aportar nada, porque el mismo problema se resolvió de
+otra forma. `fix/autorizacion-por-roles` traía un `SesionInterceptor` de 97
+líneas, un `UsuarioAdvice` y una página `/sin-permiso`; `develop` resolvió el
+mismo control de acceso con `SeguridadConfig` y `hasRole()` de Spring Security.
+Antes de conservar una rama por su conteo de commits hay que leer el diff y
+preguntar si lo que contiene sigue teniendo sentido con la arquitectura actual:
+
+```bash
+git diff origin/develop...<rama> --stat
+git diff origin/develop...<rama> -- <archivo-concreto>
+```
+
+En este proyecto el conteo decía que la rama aportaba un commit propio, y el
+diff mostró que ese commit implementaba un enfoque que el equipo ya había
+descartado. Guardar una rama por si acaso sin leerla solo traslada la
+decisión, no la resuelve.
+
+Las dos comprobaciones se hacen antes de borrar y se dejan escritas en el
+informe, porque son las que justifican la decisión cuando alguien pregunte
+después por qué esa rama desapareció o por qué se conservó.
+
 ---
 
 ## 4. Ejecución
@@ -147,9 +191,9 @@ siguen intactos.
 | Métrica | Antes | Después |
 |---|---|---|
 | Ramas remotas | 28 | 3 |
-| Reducción | — | **89 %** |
-| PRs afectados | — | **0** |
-| Commits perdidos | — | **0** |
+| Reducción | - | **89 %** |
+| PRs afectados | - | **0** |
+| Commits perdidos | - | **0** |
 
 ---
 
@@ -159,7 +203,7 @@ siguen intactos.
 
 | # | Rama eliminada | Integrada por | Fecha |
 |---|---|---|---|
-| 1 | `Rama-Secundaria` | *(ejercicio inicial de ramificación, sin PR)* | — |
+| 1 | `Rama-Secundaria` | *(ejercicio inicial de ramificación, sin PR)* | - |
 | 2 | `chore/ci` | PR #14 | 18-oct-2026 |
 | 3 | `docs/readme-develop` | PR #20 | 19-oct-2026 |
 | 4 | `feature/auth` | PR #1 | 02-sep-2026 |
@@ -193,13 +237,13 @@ ya estaba en `main` y nunca tuvo PR propio.
 |---|---|
 | `main` | Rama permanente y estable |
 | `develop` | Rama permanente de integración |
-| `docs/informe-apf2` | PR #23 abierto — se poda al fusionarse |
-| `feature/bd-docker` | PR #34 abierto — se poda al fusionarse |
-| `infra/proteccion-ramas` | PR #36 abierto — se poda al fusionarse |
+| `docs/informe-apf2` | PR #23 abierto - se poda al fusionarse |
+| `feature/bd-docker` | PR #34 abierto - se poda al fusionarse |
+| `infra/proteccion-ramas` | PR #36 abierto - se poda al fusionarse |
 
 Las tres ramas de trabajo se podaron **el mismo día** en que se fusionaron sus
 respectivos Pull Requests, lo que confirma que la política se aplica de forma
-sistemática y no solo una vez.
+sistemática y no una sola vez.
 
 ### 5.3 Estado final
 
@@ -233,7 +277,7 @@ En **Settings → Branches** se configuró, para ambas ramas:
 - `Require status checks to pass` con el check **build** obligatorio
 
 Con esto, ningún cambio entra sin revisión y sin pasar las pruebas. Además, el
-flujo obliga a que cada integración tenga su PR, lo que garantiza que **toda
+flujo obliga a que cada integración tenga su PR, de modo que **toda
 rama pueda podarse después con trazabilidad completa**.
 
 ### 6.3 Hábito de equipo
@@ -270,7 +314,7 @@ procedimiento de la sección 3.
 | Ramas con PR documentado | 22 de 23 |
 | Automatización | Borrado automático activado |
 
-La poda convirtió un repositorio con 28 ramas —la mayoría ya integradas y sin
-función— en uno con tres referencias vivas y significativas, sin perder un solo
+La poda convirtio un repositorio con 28 ramas, la mayoria ya integradas y sin
+funcion, en uno con tres referencias vivas y significativas, sin perder un solo
 commit y conservando la trazabilidad completa de cada integración en su Pull
 Request.
